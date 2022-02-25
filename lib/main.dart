@@ -19,7 +19,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final WebSocketChannel channel = IOWebSocketChannel.connect(
-      "wss://demo.piesocket.com/v3/channel_1?api_key=oCdCMcMPQpbvNjUIzqtvF1d2X2okWpDQj4AwARJuAgtjhzKxVEjQU6IdCjwm&notify_self");
+      "wss://demo.piesocket.com/v3/channel_1?api_key=oCdCMcMPQpbvNjUIzqtvF1d2X2okWpDQj4AwARJuAgtjhzKxVEjQU6IdCjwm&notify_self",
+      headers: {'Connection': 'upgrade', 'Upgrade': 'websocket'});
   Color bgColor = Colors.white;
 
   @override
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
             onPressed: _sendMessage,
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.greenAccent),
+                  MaterialStateProperty.all<Color>(Colors.blue),
             ),
             child: Text(
               "Hello",
