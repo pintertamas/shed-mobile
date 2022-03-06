@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -70,12 +71,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _sendMessage() {
+    String message = Random.secure().nextInt(100).toString();
     stompClient.send(
-      destination: 'topic/asd',
-      body: json.encode({'a': 123}),
+      destination: '/topic/asd',
+      body: json.encode({'message': message}),
     );
-    print(stompClient.connected);
-    print(stompClient.config.url);
+    print("connected: " + stompClient.connected.toString() + " to " + stompClient.config.url.toString());
+    print("sending message: " + message);
   }
 
   void onConnect(StompFrame frame) {
