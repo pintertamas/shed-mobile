@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -16,6 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StompClient stompClient;
+  TextEditingController textEditingController = new TextEditingController();
   String message = "";
 
   @override
@@ -49,20 +49,40 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.deepPurple,
-        body: Center(
-          child: TextButton(
-            onPressed: _sendMessage,
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-            ),
-            child: Text(
-              message == "" ? "Click" : message,
-              textDirection: TextDirection.ltr,
-              style: TextStyle(
-                color: Colors.black,
-              ),
+      home: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.deepPurple,
+          body: Center(
+            child: Column(
+              children: [
+                TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter your message',
+                  ),
+                ),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Text(message == "" ? "No new messages" : message),
+                ),
+                TextButton(
+                  onPressed: _sendMessage,
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                  ),
+                  child: Text(
+                    "Click",
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -71,12 +91,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _sendMessage() {
-    String message = Random.secure().nextInt(100).toString();
+    String message = textEditingController.text.toString();
     stompClient.send(
       destination: '/topic/asd',
       body: json.encode({'message': message}),
     );
-    print("connected: " + stompClient.connected.toString() + " to " + stompClient.config.url.toString());
+    print("connected: " +
+        stompClient.connected.toString() +
+        " to " +
+        stompClient.config.url.toString());
     print("sending message: " + message);
   }
 
