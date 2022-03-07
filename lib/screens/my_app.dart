@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,12 +17,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String? _deviceId;
   late StompClient stompClient;
   TextEditingController textEditingController = new TextEditingController();
   String message = "";
 
+  Future<void> initPlatformState() async {
+    String? deviceId;
+    deviceId = await PlatformDeviceId.getDeviceId;
+
+    if (!mounted) return;
+
+    setState(() {
+      _deviceId = deviceId;
+      print("deviceId->$_deviceId");
+    });
+  }
+
   @override
   void initState() {
+    initPlatformState();
     stompClient = StompClient(
       config: StompConfig.SockJS(
         url: 'https://192.168.0.34:8443/shed',
@@ -53,36 +70,13 @@ class _MyAppState extends State<MyApp> {
         child: Scaffold(
           backgroundColor: Colors.deepPurple,
           body: Center(
-            child: Column(
-              children: [
-                TextField(
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter your message',
-                  ),
-                ),
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  color: Colors.white,
-                  child: Text(message == "" ? "No new messages" : message),
-                ),
-                TextButton(
-                  onPressed: _sendMessage,
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                  ),
-                  child: Text(
-                    "Click",
-                    textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
+            child: Container(
+              height: 200,
+              width: double.infinity,
+              color: Colors.white,
+              child: Center(
+                child: Text(message == "" ? "No new messages" : message),
+              ),
             ),
           ),
         ),
@@ -118,8 +112,12 @@ class _MyAppState extends State<MyApp> {
 
     Timer.periodic(Duration(seconds: 1), (_) {
       stompClient.send(
-        destination: 'topic/asd',
-        body: json.encode({'a': 123}),
+        destination: '/topic/asd',
+        body: json.encode({
+          'message': _deviceId.toString() +
+              " says: " +
+              Random.secure().nextInt(100).toString()
+        }),
       );
     });
   }
