@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
     stompClient = StompClient(
       config: StompConfig.SockJS(
-        url: 'https://192.168.0.34:8443/shed',
+        url: 'https://shed-backend.herokuapp.com/shed',
         onConnect: onConnect,
         onDisconnect: onDisconnect,
         onStompError: (error) {
@@ -68,6 +68,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _sendMessage();
+            },
+            child: Icon(
+              FontAwesomeIcons.envelope,
+            ),
+          ),
           backgroundColor: Colors.deepPurple,
           body: Center(
             child: Container(
@@ -87,7 +95,7 @@ class _MyAppState extends State<MyApp> {
   void _sendMessage() {
     String message = textEditingController.text.toString();
     stompClient.send(
-      destination: '/topic/asd',
+      destination: '/topic/greetings',
       body: json.encode({'message': message}),
     );
     print("connected: " +
@@ -98,7 +106,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onConnect(StompFrame frame) {
-    String gameId = 'asd';
+    String gameId = 'greetings';
     stompClient.subscribe(
       destination: '/topic/' + gameId,
       callback: (frame) {
@@ -112,7 +120,7 @@ class _MyAppState extends State<MyApp> {
 
     Timer.periodic(Duration(seconds: 1), (_) {
       stompClient.send(
-        destination: '/topic/asd',
+        destination: '/topic/greetings',
         body: json.encode({
           'message': _deviceId.toString() +
               " says: " +
