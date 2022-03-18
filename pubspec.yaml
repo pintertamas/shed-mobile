@@ -17,6 +17,7 @@ dependencies:
   web_socket_channel: ^2.1.0
   stomp_dart_client: ^0.4.3
   qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.7.0
 
 dev_dependencies:
   flutter_test:

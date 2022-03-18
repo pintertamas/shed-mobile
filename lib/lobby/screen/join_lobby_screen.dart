@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:websocket_mobile/lobby/service/websocket_service.dart';
 
 class JoinLobbyScreen extends StatefulWidget {
-  const JoinLobbyScreen({Key? key}) : super(key: key);
+  const JoinLobbyScreen({Key? key, required this.gameId}) : super(key: key);
+  final String gameId;
+
+  static const routeName = '/join-lobby';
 
   @override
   _JoinLobbyScreenState createState() => _JoinLobbyScreenState();
@@ -10,7 +13,6 @@ class JoinLobbyScreen extends StatefulWidget {
 
 class _JoinLobbyScreenState extends State<JoinLobbyScreen> {
   late WebSocketService _webSocketService;
-  String channel = "asd";
 
   WebSocketService get webSocketService => _webSocketService;
 
@@ -21,7 +23,7 @@ class _JoinLobbyScreenState extends State<JoinLobbyScreen> {
   @override
   void initState() {
     webSocketService = WebSocketService();
-    webSocketService.initStompClient(channel);
+    webSocketService.initStompClient(widget.gameId);
     super.initState();
   }
 
@@ -31,13 +33,18 @@ class _JoinLobbyScreenState extends State<JoinLobbyScreen> {
       home: SafeArea(
         child: Scaffold(
           body: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                webSocketService.sendMessage(channel, "hello");
-              },
-              child: Text(
-                "say hello",
-              ),
+            child: Column(
+              children: [
+                Text(widget.gameId),
+                ElevatedButton(
+                  onPressed: () {
+                    webSocketService.sendMessage(widget.gameId, "hello");
+                  },
+                  child: Text(
+                    "say hello",
+                  ),
+                ),
+              ],
             ),
           ),
         ),
