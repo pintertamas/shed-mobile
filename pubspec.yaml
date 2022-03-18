@@ -16,8 +16,6 @@ dependencies:
   build_runner: ^2.1.7
   web_socket_channel: ^2.1.0
   stomp_dart_client: ^0.4.3
-  device_info_plus: ^3.2.2
-  platform_device_id: ^1.0.1
   qr_flutter: ^4.0.0
 
 dev_dependencies:
