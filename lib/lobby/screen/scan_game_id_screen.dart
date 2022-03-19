@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:websocket_mobile/lobby/model/ScreenArguments.dart';
+import 'package:websocket_mobile/lobby/model/screen_arguments.dart';
 import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
 
 class ScanGameIdScreen extends StatefulWidget {
@@ -20,22 +20,6 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
   bool gameFoundAlready = false;
 
   @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  void reassemble() async {
-    super.reassemble();
-
-    if (Platform.isAndroid) {
-      await controller!.pauseCamera();
-    }
-    controller!.resumeCamera();
-  }
-
-  @override
   Widget build(BuildContext context) => SafeArea(
         child: Scaffold(
           body: Stack(
@@ -44,14 +28,14 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
               _buildQrView(context),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.05,
-                child: buildResult(),
+                child: _buildResult(),
               ),
             ],
           ),
         ),
       );
 
-  Widget buildResult() => Container(
+  Widget _buildResult() => Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white24, borderRadius: BorderRadius.circular(10)),
@@ -63,7 +47,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
 
   Widget _buildQrView(BuildContext context) => QRView(
         key: qrKey,
-        onQRViewCreated: onQRViewCreated,
+        onQRViewCreated: _onQRViewCreated,
         overlay: QrScannerOverlayShape(
           cutOutSize: MediaQuery.of(context).size.width * 0.8,
           borderWidth: 30,
@@ -73,11 +57,12 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
         ),
       );
 
-  void onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
 
     controller.scannedDataStream.listen(
       (qrcode) {
+        print(qrcode.code);
         if (gameFoundAlready) return;
         gameFoundAlready = true;
         // TODO: check if qrcode.code is a valid game ID

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/login/widget/custom_text_input.dart';
 
-import '../../lobby/model/ScreenArguments.dart';
+import '../../lobby/model/screen_arguments.dart';
 import '../../lobby/screen/lobby_screen.dart';
 import '../../lobby/screen/scan_game_id_screen.dart';
 
@@ -82,7 +83,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // TODO
+                      Navigator.pushNamed(context, BrowseGamesScreen.routeName);
                     },
                     child: Text("Browse games"),
                   ),

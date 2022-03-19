@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/lobby/model/ScreenArguments.dart';
+import 'package:websocket_mobile/lobby/model/screen_arguments.dart';
+import 'package:websocket_mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/login/screen/login_screen.dart';
 import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/login/screen/welcome_screen.dart';
@@ -18,6 +19,7 @@ void main() {
       routes: {
         LoginScreen.routeName: (context) => const LoginScreen(),
         WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+        BrowseGamesScreen.routeName: (context) => const BrowseGamesScreen(),
         ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
       },
       onGenerateRoute: (settings) {
