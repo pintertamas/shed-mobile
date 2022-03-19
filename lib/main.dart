@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/lobby/screen/browse_games.dart';
@@ -9,8 +10,6 @@ import 'package:websocket_mobile/lobby/screen/scan_game_id_screen.dart';
 import 'package:websocket_mobile/login/screen/login_screen.dart';
 import 'package:websocket_mobile/login/screen/welcome_screen.dart';
 import 'package:websocket_mobile/my_http_override.dart';
-
-import 'game/model/game_screen_arguments.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
