@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:websocket_mobile/lobby/model/lobby_screen_arguments.dart';
-import 'package:websocket_mobile/lobby/screen/browse_games.dart';
-import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
-import 'package:websocket_mobile/lobby/screen/scan_game_id_screen.dart';
-import 'package:websocket_mobile/login/widget/custom_text_input.dart';
+import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
+import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
+import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
+import 'package:websocket_mobile/mobile/login/widget/custom_text_input.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);

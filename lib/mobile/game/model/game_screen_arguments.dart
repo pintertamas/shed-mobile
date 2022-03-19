@@ -1,4 +1,4 @@
-import 'package:websocket_mobile/lobby/service/websocket_service.dart';
+import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 
 class GameScreenArguments {
   GameScreenArguments(this.webSocketService, this.gameId);

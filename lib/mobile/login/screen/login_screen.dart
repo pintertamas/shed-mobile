@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/login/screen/welcome_screen.dart';
-import 'package:websocket_mobile/login/widget/custom_text_input.dart';
+import 'package:websocket_mobile/mobile/login/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/login/widget/custom_text_input.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

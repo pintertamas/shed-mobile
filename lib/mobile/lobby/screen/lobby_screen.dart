@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/game/model/game_screen_arguments.dart';
-import 'package:websocket_mobile/game/screen/game_screen.dart';
-import 'package:websocket_mobile/lobby/service/websocket_service.dart';
-import 'package:websocket_mobile/login/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
+import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
+import 'package:websocket_mobile/mobile/login/screen/welcome_screen.dart';
 
 class LobbyScreen extends StatefulWidget {
   const LobbyScreen({

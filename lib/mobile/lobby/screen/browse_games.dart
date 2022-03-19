@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:websocket_mobile/lobby/widget/custom_stream_builder.dart';
+import 'package:websocket_mobile/mobile/lobby/widget/custom_stream_builder.dart';
 
 class BrowseGamesScreen extends StatefulWidget {
   const BrowseGamesScreen({Key? key}) : super(key: key);
