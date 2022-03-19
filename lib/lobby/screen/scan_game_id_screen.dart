@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:websocket_mobile/lobby/model/screen_arguments.dart';
+import 'package:websocket_mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
 
 class ScanGameIdScreen extends StatefulWidget {
@@ -69,7 +69,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
         Navigator.pushReplacementNamed(
           context,
           LobbyScreen.routeName,
-          arguments: ScreenArguments(qrcode.code!),
+          arguments: LobbyScreenArguments(qrcode.code!),
         );
       },
     );

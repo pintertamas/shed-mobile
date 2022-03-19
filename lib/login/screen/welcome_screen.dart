@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:websocket_mobile/lobby/model/screen_arguments.dart';
+import 'package:websocket_mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/lobby/screen/scan_game_id_screen.dart';
@@ -67,7 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     Navigator.pushReplacementNamed(
                                       context,
                                       LobbyScreen.routeName,
-                                      arguments: ScreenArguments(
+                                      arguments: LobbyScreenArguments(
                                         gameIdController.text.trim(),
                                       ),
                                     );

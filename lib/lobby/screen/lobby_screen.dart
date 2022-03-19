@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/game/model/game_screen_arguments.dart';
+import 'package:websocket_mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/lobby/service/websocket_service.dart';
+import 'package:websocket_mobile/login/screen/welcome_screen.dart';
 
 class LobbyScreen extends StatefulWidget {
-  const LobbyScreen({required this.gameId, Key? key, }) : super(key: key);
+  const LobbyScreen({
+    required this.gameId,
+    Key? key,
+  }) : super(key: key);
   final String gameId;
 
   static const routeName = '/lobby';
@@ -13,6 +19,7 @@ class LobbyScreen extends StatefulWidget {
 
 class _LobbyScreenState extends State<LobbyScreen> {
   late WebSocketService webSocketService;
+  late Future<bool> isConnected;
 
   @override
   void initState() {
@@ -23,32 +30,93 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
-          body: Center(
-            child: Column(
-              children: [
-                Text(widget.gameId),
-                ElevatedButton(
-                  onPressed: () {
-                    webSocketService.sendMessage(widget.gameId, 'hello');
-                  },
-                  child: const Text(
-                    'say hello',
+    return StreamBuilder<bool>(
+      stream: webSocketService.checkConnection(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (!snapshot.hasData || snapshot.data == false) {
+          return SafeArea(
+            child: Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    CircularProgressIndicator(),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Connecting'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        } else {
+          return MaterialApp(
+            home: SafeArea(
+              child: Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.gameId,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          webSocketService.sendMessage(widget.gameId, 'hello');
+                        },
+                        child: const Text(
+                          'say hello',
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            GameScreen.routeName,
+                            arguments: GameScreenArguments(
+                              webSocketService,
+                              widget.gameId,
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'go to game page',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.red),
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              WelcomeScreen.routeName,
+                            );
+                          },
+                          child: const Text(
+                            'Leave lobby',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        }
+      },
     );
-  }
-
-  @override
-  void dispose() {
-    webSocketService.deactivate();
-    super.dispose();
   }
 }

@@ -36,8 +36,11 @@ class WebSocketService {
     _activate();
   }
 
-  Future<bool> isConnected() async {
-    return stompClient.connected;
+  Stream<bool> checkConnection() async* {
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      yield stompClient.connected;
+    }
   }
 
   void _activate() {
