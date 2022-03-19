@@ -37,6 +37,10 @@ class WebSocketService {
     _activate();
   }
 
+  Future<bool> isConnected() async {
+    return await stompClient.connected;
+  }
+
   void _activate() {
     stompClient.activate();
   }

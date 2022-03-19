@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:websocket_mobile/lobby/model/ScreenArguments.dart';
-import 'package:websocket_mobile/lobby/screen/join_lobby_screen.dart';
+import 'package:websocket_mobile/lobby/screen/lobby_screen.dart';
 
 class ScanGameIdScreen extends StatefulWidget {
   const ScanGameIdScreen({Key? key}) : super(key: key);
@@ -16,8 +16,8 @@ class ScanGameIdScreen extends StatefulWidget {
 
 class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
   final qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? barcode;
   QRViewController? controller;
+  bool gameFoundAlready = false;
 
   @override
   void dispose() {
@@ -56,9 +56,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
         decoration: BoxDecoration(
             color: Colors.white24, borderRadius: BorderRadius.circular(10)),
         child: Text(
-          barcode != null
-              ? 'Game ID: ${barcode!.code}'
-              : 'Scan the code to join a game!',
+          'Scan the code to join a game!',
           maxLines: 3,
         ),
       );
@@ -78,10 +76,14 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
 
-    controller.scannedDataStream.listen((barcode) {
-      this.barcode = barcode;
-      Navigator.pushNamed(context, JoinLobbyScreen.routeName,
-          arguments: ScreenArguments(barcode.code!));
-    });
+    controller.scannedDataStream.listen(
+      (qrcode) {
+        if (gameFoundAlready) return;
+        gameFoundAlready = true;
+        // TODO: check if qrcode.code is a valid game ID
+        Navigator.pushReplacementNamed(context, LobbyScreen.routeName,
+            arguments: ScreenArguments(qrcode.code!));
+      },
+    );
   }
 }
