@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:websocket_mobile/lobby/model/screen_arguments.dart';
@@ -36,10 +34,12 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
       );
 
   Widget _buildResult() => Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            color: Colors.white24, borderRadius: BorderRadius.circular(10)),
-        child: Text(
+          color: Colors.white24,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Text(
           'Scan the code to join a game!',
           maxLines: 3,
         ),
@@ -66,8 +66,11 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
         if (gameFoundAlready) return;
         gameFoundAlready = true;
         // TODO: check if qrcode.code is a valid game ID
-        Navigator.pushReplacementNamed(context, LobbyScreen.routeName,
-            arguments: ScreenArguments(qrcode.code!));
+        Navigator.pushReplacementNamed(
+          context,
+          LobbyScreen.routeName,
+          arguments: ScreenArguments(qrcode.code!),
+        );
       },
     );
   }

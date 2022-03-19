@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/lobby/screen/scan_game_id_screen.dart';
 import 'package:websocket_mobile/login/screen/welcome_screen.dart';
 import 'package:websocket_mobile/login/widget/custom_text_input.dart';
 
@@ -18,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
+    final double _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Center(
@@ -34,38 +33,38 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomTextInput(
-                    hint: "username",
+                    hint: 'username',
                     controller: usernameController,
                   ),
                   CustomTextInput(
-                    hint: "password",
+                    hint: 'password',
                     controller: passwordController,
                   ),
                   TextButton(
                     onPressed: () {
-                      print("forgot password");
+                      print('forgot password');
                     },
-                    child: Text(
-                      "Forgot password",
+                    child: const Text(
+                      'Forgot password',
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       print(
-                        "Login> username: ${usernameController.text} password: ${passwordController.text}",
+                        'Login> username: ${usernameController.text} password: ${passwordController.text}',
                       );
-                        Navigator.pushNamed(context, WelcomeScreen.routeName);
+                      Navigator.pushNamed(context, WelcomeScreen.routeName);
                     },
-                    child: Text(
-                      "Login",
+                    child: const Text(
+                      'Login',
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      print("Sign up");
+                      print('Sign up');
                     },
-                    child: Text(
-                      "Sign up",
+                    child: const Text(
+                      'Sign up',
                     ),
                   )
                 ],

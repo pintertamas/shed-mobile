@@ -1,5 +1,5 @@
 class ScreenArguments {
-  final String gameId;
-
   ScreenArguments(this.gameId);
+
+  final String gameId;
 }

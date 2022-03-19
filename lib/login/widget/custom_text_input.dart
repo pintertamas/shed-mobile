@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomTextInput extends StatelessWidget {
-  const CustomTextInput({Key? key, required this.hint, required this.controller}) : super(key: key);
+  const CustomTextInput(
+      {required this.hint, required this.controller, Key? key})
+      : super(key: key);
   final String hint;
   final TextEditingController controller;
 
@@ -11,7 +13,7 @@ class CustomTextInput extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: TextField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           hintText: hint,
         ),
         controller: controller,

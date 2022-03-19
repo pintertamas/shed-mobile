@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../widget/custom_stream_builder.dart';
+import 'package:websocket_mobile/lobby/widget/custom_stream_builder.dart';
 
 class BrowseGamesScreen extends StatefulWidget {
   const BrowseGamesScreen({Key? key}) : super(key: key);
@@ -29,9 +29,9 @@ class _BrowseGamesScreenState extends State<BrowseGamesScreen> {
   })();
 
   Stream<double> getRandomValues() async* {
-    var random = Random(2);
+    final random = Random(2);
     while (true) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       yield random.nextDouble();
     }
   }
@@ -42,8 +42,8 @@ class _BrowseGamesScreenState extends State<BrowseGamesScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            Text("Browse games"),
-            Center(child: CustomStreamBuilder(getRandomValues())),
+            const Text('Browse games'),
+            Center(child: customStreamBuilder(getRandomValues())),
           ],
         ),
       ),
