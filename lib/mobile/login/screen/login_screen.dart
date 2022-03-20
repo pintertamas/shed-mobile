@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:websocket_mobile/mobile/login/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/login/service/user_service.dart';
 import 'package:websocket_mobile/mobile/login/widget/custom_text_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  UserService userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +51,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       print(
                         'Login> username: ${usernameController.text} password: ${passwordController.text}',
                       );
-                      Navigator.pushNamed(context, WelcomeScreen.routeName);
+                      await userService
+                          .login(
+                            usernameController.text,
+                            passwordController.text,
+                          )
+                          .then(
+                            (response) => {
+                              print('response: $response'),
+                              if (response)
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  WelcomeScreen.routeName,
+                                ),
+                            },
+                          );
                     },
                     child: const Text(
                       'Login',

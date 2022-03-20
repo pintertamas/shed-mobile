@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^9.2.0
+  dio: ^4.0.4
+  http: ^0.13.4
   lottie: ^1.2.2
   json_serializable: ^6.1.4
   build_runner: ^2.1.7
@@ -19,6 +21,7 @@ dependencies:
   stomp_dart_client: ^0.4.3
   qr_flutter: ^4.0.0
   qr_code_scanner: ^0.7.0
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:
