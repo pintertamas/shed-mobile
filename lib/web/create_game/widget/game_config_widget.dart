@@ -29,7 +29,7 @@ Widget gameConfigWidget(BuildContext context, double paddingSize) => Padding(
                   child: ElevatedButton(
                     onPressed: () {
                       // TODO: create game
-                      const String gameName = 'asd';
+                      const String gameName = 'Canoodle_Gobemouche';
                       Navigator.pushNamed(
                         context,
                         QRScreen.routeName,

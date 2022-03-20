@@ -1,8 +1,5 @@
-import 'dart:async';
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QRScreen extends StatefulWidget {
@@ -16,51 +13,59 @@ class QRScreen extends StatefulWidget {
 }
 
 class _QRScreenState extends State<QRScreen> {
+  bool errorLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    /*final qrFutureBuilder = FutureBuilder<ui.Image>(
-      future: _loadOverlayImage(),
-      builder: (ctx, snapshot) {
-        const size = 280.0;
-        if (!snapshot.hasData) {
-          return const SizedBox(width: size, height: size);
-        }
-        return CustomPaint(
-          size: const Size.square(size),
-          painter: QrPainter(
-            data: widget.name,
-            version: QrVersions.auto,
-            eyeStyle: const QrEyeStyle(
-              eyeShape: QrEyeShape.square,
-              color: Color(0xff128760),
+    final double qrHeight = MediaQuery.of(context).size.height * 0.5;
+
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            QrImage(
+              data: widget.name,
+              version: QrVersions.auto,
+              size: qrHeight,
+              errorStateBuilder: (cxt, err) {
+                print(err.toString());
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Icon(
+                        FontAwesomeIcons.exclamationCircle,
+                        color: Colors.red,
+                        size: qrHeight / 4,
+                      ),
+                    ),
+                    Text(
+                      'Uh oh! Something went wrong... Try again in a few minutes!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: qrHeight / 25,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            dataModuleStyle: const QrDataModuleStyle(
-              dataModuleShape: QrDataModuleShape.circle,
-              color: Color(0xff1a5441),
+            const Text('To manually join a game, type the following:'),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                widget.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            // size: 320.0,
-            embeddedImage: snapshot.data,
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size.square(60),
-            ),
-          ),
-        );
-      },
-    );
-    return Center(
-      child: qrFutureBuilder,
-    );*/
-    return QrImage(
-      data: widget.name,
-      version: QrVersions.auto,
-      size: 200.0,
+          ],
+        ),
+      ),
     );
   }
-
-  /*Future<ui.Image> _loadOverlayImage() async {
-    final completer = Completer<ui.Image>();
-    final byteData = await rootBundle.load('assets/images/4.0x/logo_yakka.png');
-    ui.decodeImageFromList(byteData.buffer.asUint8List(), completer.complete);
-    return completer.future;
-  }*/
 }
