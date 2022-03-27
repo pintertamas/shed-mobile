@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/login/screen/welcome_screen.dart';
-import 'package:websocket_mobile/mobile/login/service/user_service.dart';
-import 'package:websocket_mobile/mobile/login/widget/custom_text_input.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/login';
+  static const routeName = '/sign-up';
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   UserService userService = UserService();
@@ -42,21 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     hint: 'password',
                     controller: passwordController,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      print('forgot password');
-                    },
-                    child: const Text(
-                      'Forgot password',
-                    ),
-                  ),
                   ElevatedButton(
                     onPressed: () async {
                       print(
-                        'Login> username: ${usernameController.text} password: ${passwordController.text}',
+                        'Sign up> username: ${usernameController.text} password: ${passwordController.text}',
                       );
                       await userService
-                          .login(
+                          .register(
                             usernameController.text,
                             passwordController.text,
                           )
@@ -72,17 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                     },
                     child: const Text(
-                      'Login',
+                      'Register',
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      print('Sign up');
-                    },
-                    child: const Text(
-                      'Sign up',
-                    ),
-                  )
                 ],
               ),
             ),

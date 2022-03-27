@@ -4,19 +4,22 @@ import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart'
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
-import 'package:websocket_mobile/mobile/login/widget/custom_text_input.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/welcome-screen';
+  static const routeName = '/home-screen';
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   TextEditingController gameIdController = TextEditingController();
+  UserService userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +98,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       // TODO
                     },
                     child: const Text('Statistics (TBA)'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      userService.logout();
+                      Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                    ),
+                    child: const Text('Logout'),
                   ),
                 ],
               ),

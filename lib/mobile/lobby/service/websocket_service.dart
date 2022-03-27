@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -9,6 +10,10 @@ class WebSocketService {
   late StompClient stompClient;
 
   Future<void> initStompClient(String channel) async {
+    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+    final String jwtToken = prefs.getString('jwtToken')!;
+
     stompClient = StompClient(
       config: StompConfig.SockJS(
         url: 'https://shed-backend.herokuapp.com/shed',
@@ -28,8 +33,8 @@ class WebSocketService {
           print('connecting...');
         },
         onWebSocketError: (dynamic error) => print(error.toString()),
-        stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
-        webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
+        stompConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
+        webSocketConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
       ),
     );
 

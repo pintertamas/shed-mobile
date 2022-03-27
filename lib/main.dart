@@ -8,8 +8,11 @@ import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart'
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
-import 'package:websocket_mobile/mobile/login/screen/login_screen.dart';
-import 'package:websocket_mobile/mobile/login/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/login_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/sign_up_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
 import 'package:websocket_mobile/my_http_override.dart';
 import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
@@ -20,11 +23,14 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: kIsWeb ? CreateGameScreen.routeName : LoginScreen.routeName,
+      initialRoute: kIsWeb ? CreateGameScreen.routeName : LoadingScreen.routeName,
       routes: {
         // mobile screens
-        LoginScreen.routeName: (context) => const LoginScreen(),
         WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+        LoadingScreen.routeName: (context) => const LoadingScreen(),
+        SignUpScreen.routeName: (context) => const SignUpScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        HomeScreen.routeName: (context) => const HomeScreen(),
         BrowseGamesScreen.routeName: (context) => const BrowseGamesScreen(),
         ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
 
