@@ -70,6 +70,8 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                             'Forgot password',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.brown,
                             ),
                           ),
                         ),
