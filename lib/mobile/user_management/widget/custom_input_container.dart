@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
 class CustomInputContainer extends StatefulWidget {
   const CustomInputContainer({
@@ -49,20 +50,14 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'username',
-                      ),
+                    CustomTextInput(
+                      hint: 'username',
                       controller: widget.usernameController,
                     ),
-                    TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'password',
-                      ),
+                    CustomTextInput(
+                      hint: 'password',
                       controller: widget.passwordController,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
+                      isPassword: true,
                     ),
                     if (widget.isLogin)
                       Padding(
