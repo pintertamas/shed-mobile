@@ -41,8 +41,7 @@ class UserService {
   }
 
   Future<bool> login(String username, String password) async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
       final response = await dio.post(
@@ -76,15 +75,16 @@ class UserService {
   }
 
   Future<void> logout() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwtToken', '');
   }
 
   Future<bool> checkTokenValidity() async {
-    final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-    final SharedPreferences prefs = await _prefs;
-    final String jwtToken = prefs.getString('jwtToken')!;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwtToken = prefs.getString('jwtToken');
+    print(jwtToken);
+
+    if (jwtToken == null || jwtToken == '') return false;
 
     try {
       final response = await dio.get(
@@ -108,6 +108,9 @@ class UserService {
       }
     } on DioError catch (e) {
       print(e.response!.statusCode ?? 'Error');
+      return false;
+    } on Exception catch (e) {
+      print(e.toString());
       return false;
     }
   }
