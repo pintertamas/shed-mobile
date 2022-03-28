@@ -21,6 +21,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: TextField(
+        cursorColor: Colors.brown,
         decoration: InputDecoration(
           hintText: widget.hint,
           enabledBorder: const UnderlineInputBorder(

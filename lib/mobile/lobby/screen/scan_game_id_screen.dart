@@ -53,7 +53,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
           borderWidth: 30,
           borderLength: 50,
           borderRadius: 10,
-          borderColor: Colors.lightBlue, // TODO: Make a theme for the project!
+          borderColor: Colors.green, // TODO: Make a theme for the project!
         ),
       );
 

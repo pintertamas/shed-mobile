@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   hint: 'Game ID',
                                   controller: gameIdController,
                                 ),
-                                ElevatedButton(
+                                CustomButton(
                                   onPressed: () {
                                     // TODO: check if gameIdController.text.trim() is a valid game ID
                                     Navigator.pushReplacementNamed(
@@ -78,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                                   },
-                                  child: const Text('Join'),
+                                  size: MediaQuery.of(context).size.width * 0.5,
+                                  text: 'Join',
                                 ),
                               ],
                             ),
