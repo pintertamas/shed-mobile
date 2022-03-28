@@ -6,6 +6,7 @@ import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final double _settingsIconGap = MediaQuery.of(context).size.height * 0.015;
     return Scaffold(
+      backgroundColor: Colors.brown,
       body: SafeArea(
         child: Stack(
           children: [
@@ -32,7 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
               top: _settingsIconGap,
               right: _settingsIconGap,
               child: IconButton(
-                icon: const Icon(FontAwesomeIcons.bars),
+                icon: const Icon(
+                  FontAwesomeIcons.bars,
+                  color: Colors.white,
+                ),
                 onPressed: () {},
               ),
             ),
@@ -40,15 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(
+                  CustomButton(
                     onPressed: () {
                       Navigator.pushNamed(context, ScanGameIdScreen.routeName);
                     },
-                    child: const Text(
-                      'Scan game QR code',
-                    ),
+                    text: 'Scan game QR code',
                   ),
-                  ElevatedButton(
+                  CustomButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -83,32 +86,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       );
                     },
-                    child: const Text(
-                      'Join manually',
-                    ),
+                    text: 'Join manually',
                   ),
-                  ElevatedButton(
+                  CustomButton(
                     onPressed: () {
                       Navigator.pushNamed(context, BrowseGamesScreen.routeName);
                     },
-                    child: const Text('Browse games'),
+                    text: 'Browse games',
                   ),
-                  ElevatedButton(
+                  CustomButton(
                     onPressed: () {
                       // TODO
                     },
-                    child: const Text('Statistics (TBA)'),
+                    text: 'Statistics (TBA)',
                   ),
-                  ElevatedButton(
+                  CustomButton(
                     onPressed: () {
                       userService.logout();
-                      Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
+                      Navigator.pushReplacementNamed(
+                          context, WelcomeScreen.routeName);
                     },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red),
-                    ),
-                    child: const Text('Logout'),
+                    isRed: true,
+                    text: 'Logout',
                   ),
                 ],
               ),

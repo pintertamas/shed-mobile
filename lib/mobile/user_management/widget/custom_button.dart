@@ -2,11 +2,17 @@ import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
-  CustomButton({required this.onPressed, required this.text, this.size, Key? key})
+  CustomButton(
+      {required this.onPressed,
+      required this.text,
+      this.size,
+      this.isRed,
+      Key? key})
       : super(key: key);
   final void Function() onPressed;
   final String text;
   double? size;
+  bool? isRed;
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -20,7 +26,11 @@ class _CustomButtonState extends State<CustomButton> {
       child: AnimatedButton(
         onPressed: widget.onPressed,
         width: widget.size ?? MediaQuery.of(context).size.width * 0.8,
-        color: Colors.green,
+        color: widget.isRed != null
+            ? widget.isRed!
+                ? Colors.red
+                : Colors.green
+            : Colors.green,
         child: Text(
           widget.text,
           style: const TextStyle(
