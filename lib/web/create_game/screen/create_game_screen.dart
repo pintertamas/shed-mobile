@@ -15,21 +15,19 @@ class CreateGameScreen extends StatefulWidget {
 class _CreateGameScreenState extends State<CreateGameScreen> {
   @override
   Widget build(BuildContext context) {
-    const double _paddingSize = 20.0;
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.yellow[100],
+        backgroundColor: Colors.brown,
         body: Center(
           child: Row(
             children: [
               Expanded(
                 flex: 2,
-                child: browseGamesWidget(_paddingSize),
+                child: browseGamesWidget(20.0),
               ),
-              Expanded(
+              const Expanded(
                 flex: 3,
-                child: gameConfigWidget(context, _paddingSize),
+                child: GameConfigWidget(),
               ),
             ],
           ),
