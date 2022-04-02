@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 
 class QRScreen extends StatefulWidget {
   const QRScreen({required this.name, Key? key}) : super(key: key);
@@ -14,6 +16,14 @@ class QRScreen extends StatefulWidget {
 
 class _QRScreenState extends State<QRScreen> {
   bool errorLoading = false;
+  late WebSocketService webSocketService;
+
+  @override
+  void initState() {
+    webSocketService = WebSocketService();
+    webSocketService.initStompClientOnWeb();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +73,16 @@ class _QRScreenState extends State<QRScreen> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: CustomButton(
+                onPressed: () {
+                  webSocketService.startGame(widget.name);
+                },
+                text: 'Start game',
+                size: MediaQuery.of(context).size.width * 0.3,
+              ),
+            )
           ],
         ),
       ),

@@ -41,6 +41,29 @@ class WebSocketService {
     _activate();
   }
 
+  Future<void> initStompClientOnWeb() async {
+    stompClient = StompClient(
+      config: StompConfig.SockJS(
+        url: 'https://shed-backend.herokuapp.com/shed',
+        onDisconnect: _onDisconnect,
+        onStompError: (StompFrame error) {
+          print('stompError: $error');
+        },
+        onUnhandledMessage: (StompFrame error) {
+          print('unhandledError: $error');
+        },
+        beforeConnect: () async {
+          print('waiting to connect...');
+          await Future.delayed(const Duration(milliseconds: 200));
+          print('connecting...');
+        },
+        onWebSocketError: (dynamic error) => print(error.toString()),
+      ),
+    );
+
+    _activate();
+  }
+
   Stream<bool> checkConnection() async* {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -59,7 +82,9 @@ class WebSocketService {
         print('receiving message...');
         final dynamic result = json.decode(frame.body!);
         final String message = result['message'].toString();
+        final String gameName = result['gameName'].toString();
         print(message);
+        print(gameName);
       },
     );
     print('connected to ${stompClient.config.url}');
@@ -78,6 +103,14 @@ class WebSocketService {
       }), // TODO: It's going to be a JSON containing all the data
     );
     print('Sending message: $message');
+  }
+
+  void startGame(channel) {
+    if (!stompClient.connected) return;
+    stompClient.send(
+      destination: '/app/start-game/$channel',
+    );
+    print('Start game signal sent...');
   }
 
   void deactivate() {
