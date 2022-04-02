@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_input_container.dart';
 
@@ -33,12 +33,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
               passwordController.text,
             )
             .then(
-              (response) => {
+              (response) async => {
+                await userService.login(
+                  usernameController.text,
+                  passwordController.text,
+                ),
                 print('response: $response'),
                 if (response)
                   Navigator.pushReplacementNamed(
                     context,
-                    WelcomeScreen.routeName,
+                    HomeScreen.routeName,
                   ),
               },
             );
