@@ -58,8 +58,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
             ),
           );
         } else {
-          return MaterialApp(
-            home: SafeArea(
+          return Scaffold(
+            body: SafeArea(
               child: Scaffold(
                 body: Center(
                   child: Column(
