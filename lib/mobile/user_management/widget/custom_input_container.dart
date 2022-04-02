@@ -32,60 +32,63 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(50.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.white70,
-                    spreadRadius: 3,
-                    offset: Offset(1.5, 3),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomTextInput(
-                      hint: 'username',
-                      controller: widget.usernameController,
+            child: GestureDetector(
+              onTap: () {},
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.white70,
+                      spreadRadius: 3,
+                      offset: Offset(1.5, 3),
                     ),
-                    CustomTextInput(
-                      hint: 'password',
-                      controller: widget.passwordController,
-                      isPassword: true,
-                    ),
-                    if (widget.isLogin)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: TextButton(
-                          onPressed: () {
-                            print('forgot password');
-                          },
-                          child: const Text(
-                            'Forgot password',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: Colors.brown,
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomTextInput(
+                        hint: 'username',
+                        controller: widget.usernameController,
+                      ),
+                      CustomTextInput(
+                        hint: 'password',
+                        controller: widget.passwordController,
+                        isPassword: true,
+                      ),
+                      if (widget.isLogin)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: TextButton(
+                            onPressed: () {
+                              print('forgot password');
+                            },
+                            child: const Text(
+                              'Forgot password',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.brown,
+                              ),
                             ),
                           ),
                         ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
+                        child: CustomButton(
+                          onPressed: widget.onPressed,
+                          size: MediaQuery.of(context).size.width * 0.5,
+                          text: widget.isLogin ? 'Login' : 'Register',
+                        ),
                       ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
-                      child: CustomButton(
-                        onPressed: widget.onPressed,
-                        size: MediaQuery.of(context).size.width * 0.5,
-                        text: widget.isLogin ? 'Login' : 'Register',
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
