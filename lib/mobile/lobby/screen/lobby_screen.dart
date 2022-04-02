@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
-import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 
 class LobbyScreen extends StatefulWidget {
   const LobbyScreen({
@@ -26,6 +26,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
     webSocketService = WebSocketService();
     webSocketService.initStompClient(widget.gameId);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    webSocketService.deactivate();
+    print('Deactivating websockets...');
+    super.dispose();
   }
 
   @override
@@ -101,7 +108,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           onPressed: () {
                             Navigator.pushReplacementNamed(
                               context,
-                              WelcomeScreen.routeName,
+                              HomeScreen.routeName,
                             );
                           },
                           child: const Text(
