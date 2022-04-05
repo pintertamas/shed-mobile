@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/model/player.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/game/service/game_service.dart';
@@ -40,6 +41,20 @@ class _LobbyScreenState extends State<LobbyScreen> {
     }
   }
 
+  void _checkGameStart() {
+    webSocketService.webSocketStream.listen((snapshot) {
+      if (snapshot.type == 'game-start') {
+        Navigator.of(context).pushReplacementNamed(
+          GameScreen.routeName,
+          arguments: GameScreenArguments(
+            webSocketService,
+            widget.gameId,
+          ),
+        );
+      }
+    });
+  }
+
   @override
   void initState() {
     userService = UserService();
@@ -47,14 +62,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
     webSocketService.initStompClient(widget.gameId);
     gameService = GameService();
     listPlayers = loadConnectedUsers();
+    Future.delayed(Duration.zero, _checkGameStart);
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    webSocketService.deactivate();
-    print('Deactivating websockets...');
-    super.dispose();
   }
 
   @override
@@ -111,11 +120,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 AsyncSnapshot<WebSocketEvent> snapshot,
                               ) {
                                 if (snapshot.hasData && snapshot.data != null) {
-                                  if (snapshot.data?.type == 'game-start') {
-                                    Navigator.of(context).pushReplacementNamed(
-                                      GameScreen.routeName,
-                                    );
-                                  } else if (snapshot.data!.type == 'join') {
+                                  if (snapshot.data!.type == 'join') {
                                     final String connectedUser =
                                         snapshot.data!.message;
                                     if (!connectedUsers
@@ -256,6 +261,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                     CustomButton(
                       onPressed: () {
                         webSocketService.leaveGame();
+                        webSocketService.deactivate();
+                        print('Leaving lobby...');
                         Navigator.pushReplacementNamed(
                           context,
                           HomeScreen.routeName,
