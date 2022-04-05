@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen(
-      {required this.webSocketService, required this.gameId, Key? key})
-      : super(key: key);
+  const GameScreen({
+    required this.webSocketService,
+    required this.gameId,
+    Key? key,
+  }) : super(key: key);
   final WebSocketService webSocketService;
   final String gameId;
 
@@ -15,6 +18,15 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

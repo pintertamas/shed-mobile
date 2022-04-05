@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/mobile/game/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
@@ -21,6 +23,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController gameIdController = TextEditingController();
   UserService userService = UserService();
+  GameService gameService = GameService();
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 CustomButton(
                                   onPressed: () {
                                     // TODO: check if gameIdController.text.trim() is a valid game ID
+                                    gameService.saveGameName(
+                                      gameIdController.text.trim(),
+                                    );
                                     Navigator.pushReplacementNamed(
                                       context,
                                       LobbyScreen.routeName,
