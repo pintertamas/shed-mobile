@@ -58,16 +58,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   void initState() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     userService = UserService();
     webSocketService = WebSocketService();
     webSocketService.initStompClient(widget.gameId);
     gameService = GameService();
     listPlayers = loadConnectedUsers();
     Future.delayed(Duration.zero, _checkGameStart);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.initState();
   }
 
@@ -154,76 +154,30 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            children: [
-                                              ListTile(
-                                                hoverColor: Colors.grey,
-                                                iconColor: const Color.fromRGBO(
+                                          child: ListTile(
+                                            hoverColor: Colors.grey,
+                                            iconColor: const Color.fromRGBO(
+                                              29,
+                                              78,
+                                              210,
+                                              1.0,
+                                            ),
+                                            leading: const Icon(
+                                              FontAwesomeIcons.userAlt,
+                                            ),
+                                            title: Text(
+                                              connectedUsers[index],
+                                              style: const TextStyle(
+                                                color: Color.fromRGBO(
                                                   29,
                                                   78,
                                                   210,
                                                   1.0,
                                                 ),
-                                                leading: const Icon(
-                                                  FontAwesomeIcons.userAlt,
-                                                ),
-                                                title: Text(
-                                                  connectedUsers[index],
-                                                  style: const TextStyle(
-                                                    color: Color.fromRGBO(
-                                                      29,
-                                                      78,
-                                                      210,
-                                                      1.0,
-                                                    ),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                  ),
-                                                ),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
                                               ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 5.0,
-                                                  horizontal: 10.0,
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'wins: $index',
-                                                      style: const TextStyle(
-                                                        color: Color.fromRGBO(
-                                                          29,
-                                                          78,
-                                                          210,
-                                                          1.0,
-                                                        ),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                      ),
-                                                    ),
-                                                    const Text(
-                                                      'ratio: 100%',
-                                                      style: TextStyle(
-                                                        color: Color.fromRGBO(
-                                                          29,
-                                                          78,
-                                                          210,
-                                                          1.0,
-                                                        ),
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -265,9 +219,12 @@ class _LobbyScreenState extends State<LobbyScreen> {
                       ),*/
                     CustomButton(
                       onPressed: () {
-                        webSocketService.leaveGame();
-                        webSocketService.deactivate();
-                        print('Leaving lobby...');
+                        webSocketService.leaveGame().then(
+                              (value) => {
+                                webSocketService.deactivate(),
+                                print('Leaving lobby...'),
+                              },
+                            );
                         Navigator.pushReplacementNamed(
                           context,
                           HomeScreen.routeName,
