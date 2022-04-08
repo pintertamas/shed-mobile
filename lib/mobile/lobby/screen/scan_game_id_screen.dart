@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
@@ -18,8 +19,18 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
   bool gameFoundAlready = false;
 
   @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) => SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.brown,
           body: Stack(
             alignment: Alignment.center,
             children: <Widget>[
@@ -62,7 +73,6 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
 
     controller.scannedDataStream.listen(
       (qrcode) {
-        print(qrcode.code);
         if (gameFoundAlready) return;
         gameFoundAlready = true;
         // TODO: check if qrcode.code is a valid game ID

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_input_container.dart';
@@ -18,6 +19,15 @@ class _LoginScreenState extends State<LoginScreen> {
   UserService userService = UserService();
 
   @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomInputContainer(
       usernameController: usernameController,
@@ -34,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
             )
             .then(
               (response) => {
+                userService.saveUsername(usernameController.text),
                 print('response: $response'),
                 if (response)
                   Navigator.pushReplacementNamed(

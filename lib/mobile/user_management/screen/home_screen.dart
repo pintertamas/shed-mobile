@@ -54,78 +54,80 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, ScanGameIdScreen.routeName);
-                    },
-                    text: 'Scan game QR code',
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  'Type here the ID that you see under the QR code!',
-                                ),
-                                CustomTextInput(
-                                  hint: 'Game ID',
-                                  controller: gameIdController,
-                                ),
-                                CustomButton(
-                                  onPressed: () {
-                                    // TODO: check if gameIdController.text.trim() is a valid game ID
-                                    gameService.saveGameName(
-                                      gameIdController.text.trim(),
-                                    );
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      LobbyScreen.routeName,
-                                      arguments: LobbyScreenArguments(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, ScanGameIdScreen.routeName);
+                      },
+                      text: 'Scan game QR code',
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Type here the ID that you see under the QR code!',
+                                  ),
+                                  CustomTextInput(
+                                    hint: 'Game ID',
+                                    controller: gameIdController,
+                                  ),
+                                  CustomButton(
+                                    onPressed: () {
+                                      // TODO: check if gameIdController.text.trim() is a valid game ID
+                                      gameService.saveGameName(
                                         gameIdController.text.trim(),
-                                      ),
-                                    );
-                                  },
-                                  size: MediaQuery.of(context).size.width * 0.5,
-                                  text: 'Join',
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    text: 'Join manually',
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, BrowseGamesScreen.routeName);
-                    },
-                    text: 'Browse games',
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      // TODO
-                    },
-                    text: 'Statistics (TBA)',
-                  ),
-                  CustomButton(
-                    onPressed: () {
-                      userService.logout();
-                      Navigator.pushReplacementNamed(
-                          context, WelcomeScreen.routeName);
-                    },
-                    isRed: true,
-                    text: 'Logout',
-                  ),
-                ],
+                                      );
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        LobbyScreen.routeName,
+                                        arguments: LobbyScreenArguments(
+                                          gameIdController.text.trim(),
+                                        ),
+                                      );
+                                    },
+                                    size: MediaQuery.of(context).size.width * 0.5,
+                                    text: 'Join',
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      text: 'Join manually',
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, BrowseGamesScreen.routeName);
+                      },
+                      text: 'Browse games',
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        // TODO
+                      },
+                      text: 'Statistics (TBA)',
+                    ),
+                    CustomButton(
+                      onPressed: () {
+                        userService.logout();
+                        Navigator.pushReplacementNamed(
+                            context, WelcomeScreen.routeName);
+                      },
+                      isRed: true,
+                      text: 'Logout',
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
