@@ -11,9 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  json_serializable: ^6.1.4
+  json_serializable: ^6.1.5
   build_runner: ^2.1.7
   dart_code_metrics: ^4.13.0
+  rxdart: ^0.27.3
+  provider: ^6.0.2
+  flutter_bloc: ^8.0.1
 
   http: ^0.13.4
   dio: ^4.0.4

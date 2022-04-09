@@ -21,7 +21,7 @@ class _QRScreenState extends State<QRScreen> {
   @override
   void initState() {
     webSocketService = WebSocketService();
-    webSocketService.initStompClientOnWeb();
+    webSocketService.initStompClientOnWeb(widget.name);
     super.initState();
   }
 

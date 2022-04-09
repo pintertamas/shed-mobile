@@ -69,9 +69,19 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print(e.response?.statusCode ?? 'Error');
       return false;
     }
+  }
+
+  Future<void> saveUsername(String username) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+  }
+
+  Future<String> getUsername() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username')??'unknown';
   }
 
   Future<void> logout() async {
