@@ -60,7 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CustomButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, ScanGameIdScreen.routeName);
+                        Navigator.pushNamed(
+                            context, ScanGameIdScreen.routeName);
                       },
                       text: 'Scan game QR code',
                     ),
@@ -94,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       );
                                     },
-                                    size: MediaQuery.of(context).size.width * 0.5,
+                                    size:
+                                        MediaQuery.of(context).size.width * 0.5,
                                     text: 'Join',
                                   ),
                                 ],
@@ -107,7 +109,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     CustomButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, BrowseGamesScreen.routeName);
+                        Navigator.pushNamed(
+                            context, BrowseGamesScreen.routeName);
                       },
                       text: 'Browse games',
                     ),
@@ -121,7 +124,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         userService.logout();
                         Navigator.pushReplacementNamed(
-                            context, WelcomeScreen.routeName);
+                          context,
+                          WelcomeScreen.routeName,
+                        );
                       },
                       isRed: true,
                       text: 'Logout',
