@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
+import 'package:websocket_mobile/mobile/user_management/service/validation_service.dart';
 
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
@@ -9,10 +11,12 @@ class CustomInputContainer extends StatefulWidget {
     required this.passwordController,
     required this.isLogin,
     required this.onPressed,
+    this.emailController,
     Key? key,
   }) : super(key: key);
   final TextEditingController usernameController;
   final TextEditingController passwordController;
+  final TextEditingController? emailController;
   final bool isLogin;
   final void Function() onPressed;
 
@@ -21,6 +25,10 @@ class CustomInputContainer extends StatefulWidget {
 }
 
 class _CustomInputContainerState extends State<CustomInputContainer> {
+  final formKey = GlobalKey<FormState>();
+  UserService userService = UserService();
+  ValidationService validationService = ValidationService();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -33,7 +41,9 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
           child: Padding(
             padding: const EdgeInsets.all(50.0),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                // its needed so the context wont pop on a tap on the container
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -48,46 +58,74 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomTextInput(
-                        hint: 'username',
-                        controller: widget.usernameController,
-                      ),
-                      CustomTextInput(
-                        hint: 'password',
-                        controller: widget.passwordController,
-                        isPassword: true,
-                      ),
-                      if (widget.isLogin)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: TextButton(
-                            onPressed: () {
-                              print('forgot password');
-                            },
-                            child: const Text(
-                              'Forgot password',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.brown,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomTextInput(
+                          //key: usernameFormKey,
+                          hint: 'username',
+                          controller: widget.usernameController,
+                          validator: ValidationService.validateUsername(
+                            widget.usernameController.text,
+                          ),
+                        ),
+                        CustomTextInput(
+                          //key: passwordFormKey,
+                          hint: 'password',
+                          controller: widget.passwordController,
+                          isPassword: true,
+                          validator: widget.isLogin
+                              ? ValidationService.validateLoginPassword(
+                                  widget.passwordController.text,
+                                )
+                              : ValidationService.validateRegisterPassword(
+                                  widget.passwordController.text,
+                                ),
+                        ),
+                        if (!widget.isLogin)
+                          CustomTextInput(
+                            //key: emailFormKey,
+                            hint: 'email',
+                            controller: widget.emailController!,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: ValidationService.validateEmail(
+                                widget.emailController!.text),
+                          ),
+                        if (widget.isLogin)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: TextButton(
+                              onPressed: () {
+                                print('forgot password');
+                              },
+                              child: const Text(
+                                'Forgot password',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.brown,
+                                ),
                               ),
                             ),
                           ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
+                          child: CustomButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                widget.onPressed();
+                              }
+                            },
+                            size: MediaQuery.of(context).size.width * 0.5,
+                            text: widget.isLogin ? 'Login' : 'Register',
+                          ),
                         ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
-                        child: CustomButton(
-                          onPressed: widget.onPressed,
-                          size: MediaQuery.of(context).size.width * 0.5,
-                          text: widget.isLogin ? 'Login' : 'Register',
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

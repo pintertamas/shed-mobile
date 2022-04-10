@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:websocket_mobile/mobile/game/service/game_service.dart';
-import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
-import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
-import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/show_join_game_popup.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -24,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController gameIdController = TextEditingController();
   UserService userService = UserService();
   GameService gameService = GameService();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -60,54 +59,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CustomButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, ScanGameIdScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          ScanGameIdScreen.routeName,
+                        );
                       },
-                      text: 'Scan game QR code',
+                      text: 'Scan QR code',
                     ),
                     CustomButton(
                       onPressed: () {
-                        showDialog(
+                        showJoinGamePopup(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text(
-                                    'Type here the ID that you see under the QR code!',
-                                  ),
-                                  CustomTextInput(
-                                    hint: 'Game ID',
-                                    controller: gameIdController,
-                                  ),
-                                  CustomButton(
-                                    onPressed: () {
-                                      // TODO: check if gameIdController.text.trim() is a valid game ID
-                                      gameService.saveGameName(
-                                        gameIdController.text.trim(),
-                                      );
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        LobbyScreen.routeName,
-                                        arguments: LobbyScreenArguments(
-                                          gameIdController.text.trim(),
-                                        ),
-                                      );
-                                    },
-                                    size: MediaQuery.of(context).size.width * 0.5,
-                                    text: 'Join',
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                          formKey: formKey,
+                          gameIdController: gameIdController,
+                          gameService: gameService,
                         );
                       },
                       text: 'Join manually',
                     ),
                     CustomButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, BrowseGamesScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          BrowseGamesScreen.routeName,
+                        );
                       },
                       text: 'Browse games',
                     ),
@@ -121,7 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         userService.logout();
                         Navigator.pushReplacementNamed(
-                            context, WelcomeScreen.routeName);
+                          context,
+                          WelcomeScreen.routeName,
+                        );
                       },
                       isRed: true,
                       text: 'Logout',

@@ -13,7 +13,59 @@ class UserService {
 
   late Dio dio;
 
-  Future<bool> register(String username, String password) async {
+  Future<bool> checkAvailability(String username, String email) async {
+    try {
+      final response = await dio.post(
+        '/check-availability',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+        queryParameters: {
+          'username': username,
+          'email': email,
+        },
+      );
+      if (response.data == null) return false;
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioError catch (e) {
+      print(e.response!.statusCode ?? 'Error');
+      return false;
+    }
+  }
+
+  Future<bool> generateOtp(String email) async {
+    try {
+      final response = await dio.post(
+        '/generate-otp',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: email,
+      );
+      if (response.data == null) return false;
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioError catch (e) {
+      print(e.response!.statusCode ?? 'Error');
+      return false;
+    }
+  }
+
+  Future<bool> register(
+      String username, String password, String email, int otp) async {
     try {
       final response = await dio.post(
         '/register',
@@ -22,10 +74,10 @@ class UserService {
             'Content-Type': 'application/json',
           },
         ),
-        data: {
-          'username': username,
-          'password': password,
+        queryParameters: {
+          'otp': otp,
         },
+        data: {'username': username, 'password': password, 'email': email},
       );
       if (response.data == null) return false;
 
@@ -81,7 +133,7 @@ class UserService {
 
   Future<String> getUsername() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('username')??'unknown';
+    return prefs.getString('username') ?? 'unknown';
   }
 
   Future<void> logout() async {
