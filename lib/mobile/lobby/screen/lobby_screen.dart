@@ -98,142 +98,144 @@ class _LobbyScreenState extends State<LobbyScreen> {
             backgroundColor: Colors.brown,
             body: SafeArea(
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        widget.gameId,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.gameId,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    FutureBuilder<void>(
-                      future: listPlayers,
-                      builder: (context, AsyncSnapshot<void> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.7,
-                            child: StreamBuilder<WebSocketEvent>(
-                              stream: webSocketService.webSocketStream,
-                              builder: (
-                                BuildContext context,
-                                AsyncSnapshot<WebSocketEvent> snapshot,
-                              ) {
-                                if (snapshot.hasData && snapshot.data != null) {
-                                  if (snapshot.data!.type == 'join') {
-                                    final String connectedUser =
-                                        snapshot.data!.message;
-                                    if (!connectedUsers
-                                        .contains(connectedUser)) {
-                                      connectedUsers.add(connectedUser);
-                                    }
-                                  } else if (snapshot.data!.type == 'leave') {
-                                    final String leavingUser =
-                                        snapshot.data!.message;
-                                    if (connectedUsers.contains(leavingUser)) {
-                                      connectedUsers.remove(leavingUser);
+                      FutureBuilder<void>(
+                        future: listPlayers,
+                        builder: (context, AsyncSnapshot<void> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: StreamBuilder<WebSocketEvent>(
+                                stream: webSocketService.webSocketStream,
+                                builder: (
+                                  BuildContext context,
+                                  AsyncSnapshot<WebSocketEvent> snapshot,
+                                ) {
+                                  if (snapshot.hasData && snapshot.data != null) {
+                                    if (snapshot.data!.type == 'join') {
+                                      final String connectedUser =
+                                          snapshot.data!.message;
+                                      if (!connectedUsers
+                                          .contains(connectedUser)) {
+                                        connectedUsers.add(connectedUser);
+                                      }
+                                    } else if (snapshot.data!.type == 'leave') {
+                                      final String leavingUser =
+                                          snapshot.data!.message;
+                                      if (connectedUsers.contains(leavingUser)) {
+                                        connectedUsers.remove(leavingUser);
+                                      }
                                     }
                                   }
-                                }
-                                return ListView.builder(
-                                  itemCount: connectedUsers.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: ListTile(
-                                            hoverColor: Colors.grey,
-                                            iconColor: const Color.fromRGBO(
-                                              29,
-                                              78,
-                                              210,
-                                              1.0,
-                                            ),
-                                            leading: const Icon(
-                                              FontAwesomeIcons.userAlt,
-                                            ),
-                                            title: Text(
-                                              connectedUsers[index],
-                                              style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                  29,
-                                                  78,
-                                                  210,
-                                                  1.0,
+                                  return ListView.builder(
+                                    itemCount: connectedUsers.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: ListTile(
+                                              hoverColor: Colors.grey,
+                                              iconColor: const Color.fromRGBO(
+                                                29,
+                                                78,
+                                                210,
+                                                1.0,
+                                              ),
+                                              leading: const Icon(
+                                                FontAwesomeIcons.userAlt,
+                                              ),
+                                              title: Text(
+                                                connectedUsers[index],
+                                                style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                    29,
+                                                    78,
+                                                    210,
+                                                    1.0,
+                                                  ),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
                                                 ),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                            child: Text('Loading...'),
-                          );
-                        }
-                      },
-                    ),
-                    /*ElevatedButton(
-                        onPressed: () {
-                          webSocketService.sendMessage(widget.gameId, 'hello');
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                              child: Text('Loading...'),
+                            );
+                          }
                         },
-                        child: const Text(
-                          'say hello',
-                        ),
                       ),
-                      ElevatedButton(
+                      /*ElevatedButton(
+                          onPressed: () {
+                            webSocketService.sendMessage(widget.gameId, 'hello');
+                          },
+                          child: const Text(
+                            'say hello',
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              GameScreen.routeName,
+                              arguments: GameScreenArguments(
+                                webSocketService,
+                                widget.gameId,
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'go to game page',
+                          ),
+                        ),*/
+                      CustomButton(
                         onPressed: () {
+                          webSocketService.leaveGame().then(
+                                (value) => {
+                                  webSocketService.deactivate(),
+                                  print('Leaving lobby...'),
+                                },
+                              );
                           Navigator.pushReplacementNamed(
                             context,
-                            GameScreen.routeName,
-                            arguments: GameScreenArguments(
-                              webSocketService,
-                              widget.gameId,
-                            ),
+                            HomeScreen.routeName,
                           );
                         },
-                        child: const Text(
-                          'go to game page',
-                        ),
-                      ),*/
-                    CustomButton(
-                      onPressed: () {
-                        webSocketService.leaveGame().then(
-                              (value) => {
-                                webSocketService.deactivate(),
-                                print('Leaving lobby...'),
-                              },
-                            );
-                        Navigator.pushReplacementNamed(
-                          context,
-                          HomeScreen.routeName,
-                        );
-                      },
-                      text: 'Leave lobby',
-                      isRed: true,
-                    ),
-                  ],
+                        text: 'Leave lobby',
+                        isRed: true,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -46,6 +46,10 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void dispose() {
     widget.webSocketService.deactivate();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     super.dispose();
   }
 }
