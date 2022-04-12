@@ -195,29 +195,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           }
                         },
                       ),
-                      /*ElevatedButton(
-                          onPressed: () {
-                            webSocketService.sendMessage(widget.gameId, 'hello');
-                          },
-                          child: const Text(
-                            'say hello',
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              GameScreen.routeName,
-                              arguments: GameScreenArguments(
-                                webSocketService,
-                                widget.gameId,
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'go to game page',
-                          ),
-                        ),*/
                       CustomButton(
                         onPressed: () {
                           webSocketService.leaveGame().then(
