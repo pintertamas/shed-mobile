@@ -66,7 +66,7 @@ class _QRScreenState extends State<QRScreen> {
             const Text('To manually join a game, type the following:'),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
+              child: SelectableText(
                 widget.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,

@@ -29,9 +29,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
       padding: const EdgeInsets.all(10.0),
       child: TextFormField(
         inputFormatters: [
-          LengthLimitingTextInputFormatter(
-            widget.keyboardType == TextInputType.emailAddress ? 30 : 15,
-          ),
+          LengthLimitingTextInputFormatter(30),
         ],
         validator: widget.validator,
         keyboardType: widget.keyboardType ?? TextInputType.text,

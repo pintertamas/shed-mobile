@@ -1,7 +1,7 @@
 class ValidationService {
   static bool _validatePassword(String value) {
     const String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
     return RegExp(pattern).hasMatch(value);
   }
 
@@ -18,8 +18,7 @@ class ValidationService {
           return 'Password must be at least 8 characters long and have\n'
               '- Minimum 1 uppercase\n'
               '- Minimum 1 lowercase\n'
-              '- Minimum 1 numeric number\n'
-              '- Minimum 1 special character\n';
+              '- Minimum 1 numeric number\n';
         }
         return null;
       };
