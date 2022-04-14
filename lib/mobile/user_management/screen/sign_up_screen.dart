@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
-import 'package:websocket_mobile/mobile/user_management/otp_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/user_management/model/otp_request_type.dart';
+import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/service/otp_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_input_container.dart';
 
@@ -20,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   UserService userService = UserService();
+  OtpService otpService = OtpService();
 
   @override
   void initState() {
@@ -52,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               (response) async => {
                 if (response)
                   {
-                    userService
+                    otpService
                         .generateOtp(
                           emailController.text,
                         )
@@ -63,9 +66,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context,
                                 OtpScreen.routeName,
                                 arguments: OtpScreenArguments(
-                                  usernameController.text.trim(),
-                                  passwordController.text.trim(),
-                                  emailController.text.trim(),
+                                  username: usernameController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  email: emailController.text.trim(),
+                                  requestType: OtpRequestType.register,
                                 ),
                               ),
                           },

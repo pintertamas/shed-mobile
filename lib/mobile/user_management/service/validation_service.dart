@@ -1,7 +1,6 @@
 class ValidationService {
   static bool _validatePassword(String value) {
-    const String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
+    const String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
     return RegExp(pattern).hasMatch(value);
   }
 
@@ -10,6 +9,10 @@ class ValidationService {
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
     return RegExp(pattern).hasMatch(email);
   }
+
+  static String? Function(String?)? none() => (value) {
+        return null;
+      };
 
   static String? Function(String?)? validateRegisterPassword(String? value) =>
       (value) {
@@ -53,8 +56,8 @@ class ValidationService {
       };
 
   static String? Function(String?)? validateGameId(String? value) => (value) {
-    // TODO: check if gameIdController.text.trim() is a valid game ID
-    if (value == null || value.isEmpty) {
+        // TODO: check if gameIdController.text.trim() is a valid game ID
+        if (value == null || value.isEmpty) {
           return 'Enter a game name';
         }
         return null;

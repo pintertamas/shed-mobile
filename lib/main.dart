@@ -8,6 +8,8 @@ import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart'
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/forgot_password_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/login_screen.dart';
@@ -18,8 +20,6 @@ import 'package:websocket_mobile/my_http_override.dart';
 import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
 import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
-
-import 'mobile/user_management/otp_screen_arguments.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -35,6 +35,8 @@ void main() {
         //OtpScreen.routeName: (context) => const OtpScreen(),
         SignUpScreen.routeName: (context) => const SignUpScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(),
+        ForgotPasswordScreen.routeName: (context) =>
+            const ForgotPasswordScreen(),
         HomeScreen.routeName: (context) => const HomeScreen(),
         BrowseGamesScreen.routeName: (context) => const BrowseGamesScreen(),
         ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
@@ -52,6 +54,7 @@ void main() {
                 username: args!.username,
                 password: args.password,
                 email: args.email,
+                requestType: args.requestType,
               );
             },
           );

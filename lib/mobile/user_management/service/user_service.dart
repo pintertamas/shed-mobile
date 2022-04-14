@@ -15,7 +15,7 @@ class UserService {
 
   Future<bool> checkAvailability(String username, String email) async {
     try {
-      final response = await dio.post(
+      final response = await dio.get(
         '/check-availability',
         options: Options(
           headers: {
@@ -35,31 +35,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
-      return false;
-    }
-  }
-
-  Future<bool> generateOtp(String email) async {
-    try {
-      final response = await dio.post(
-        '/generate-otp',
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-        data: email,
-      );
-      if (response.data == null) return false;
-
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print(e.response?.statusCode ?? e.message);
       return false;
     }
   }
@@ -141,26 +117,23 @@ class UserService {
     await prefs.setString('jwtToken', '');
   }
 
-  Future<bool> checkTokenValidity() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwtToken = prefs.getString('jwtToken');
-    print(jwtToken);
-
-    if (jwtToken == null || jwtToken == '') return false;
-
+  Future<bool> changePassword(String email, int otp, String newPassword) async {
     try {
-      final response = await dio.get(
-        '/check-token-validity',
+      final response = await dio.put(
+        '/users/change-password',
         options: Options(
           headers: {
-            'Authorization': 'Bearer $jwtToken',
             'Content-Type': 'application/json',
           },
         ),
+        data: {
+          'email': email,
+          'otp': otp,
+          'password': newPassword,
+        },
       );
       if (response.data == null) return false;
 
-      print('token: $jwtToken');
       print('body: ${response.data}');
 
       if (response.statusCode == 200) {
@@ -169,7 +142,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print(e.response?.statusCode ?? e.message);
       return false;
     } on Exception catch (e) {
       print(e.toString());

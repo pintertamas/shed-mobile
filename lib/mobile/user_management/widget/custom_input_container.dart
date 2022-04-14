@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/forgot_password_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/validation_service.dart';
 
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
@@ -26,7 +26,6 @@ class CustomInputContainer extends StatefulWidget {
 
 class _CustomInputContainerState extends State<CustomInputContainer> {
   final formKey = GlobalKey<FormState>();
-  UserService userService = UserService();
   ValidationService validationService = ValidationService();
 
   @override
@@ -65,7 +64,6 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomTextInput(
-                          //key: usernameFormKey,
                           hint: 'username',
                           controller: widget.usernameController,
                           validator: ValidationService.validateUsername(
@@ -73,7 +71,6 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                           ),
                         ),
                         CustomTextInput(
-                          //key: passwordFormKey,
                           hint: 'password',
                           controller: widget.passwordController,
                           isPassword: true,
@@ -87,19 +84,22 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                         ),
                         if (!widget.isLogin)
                           CustomTextInput(
-                            //key: emailFormKey,
                             hint: 'email',
                             controller: widget.emailController!,
                             keyboardType: TextInputType.emailAddress,
                             validator: ValidationService.validateEmail(
-                                widget.emailController!.text),
+                              widget.emailController!.text,
+                            ),
                           ),
                         if (widget.isLogin)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: TextButton(
                               onPressed: () {
-                                print('forgot password');
+                                Navigator.pushNamed(
+                                  context,
+                                  ForgotPasswordScreen.routeName,
+                                );
                               },
                               child: const Text(
                                 'Forgot password',
