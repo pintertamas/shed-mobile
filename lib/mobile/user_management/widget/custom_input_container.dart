@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/forgot_password_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/validation_service.dart';
-
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 

@@ -38,7 +38,6 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
             child: Center(
               child: CustomButton(
                 onPressed: () async {
-                  //const String gameName = 'Canoodle_Gobemouche';
                   gameService.createGame().then(
                         (gameName) => {
                           print('gameName: $gameName'),
