@@ -40,8 +40,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
             }
           }
           return Center(
-            child: Text(
-              '${snapshot.connectionState}',
+            child: Column(
+              children: [
+                const CircularProgressIndicator(),
+                Text(
+                  '${snapshot.connectionState}',
+                ),
+              ],
             ),
           );
         },
