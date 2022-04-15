@@ -20,6 +20,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   UserService userService = UserService();
   OtpService otpService = OtpService();
@@ -38,6 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return CustomInputContainer(
       usernameController: usernameController,
       passwordController: passwordController,
+      confirmPasswordController: confirmPasswordController,
       emailController: emailController,
       isLogin: false,
       onPressed: () async {

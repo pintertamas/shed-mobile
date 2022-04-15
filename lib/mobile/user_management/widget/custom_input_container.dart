@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/forgot_password_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/validation_service.dart';
 
@@ -11,11 +12,13 @@ class CustomInputContainer extends StatefulWidget {
     required this.passwordController,
     required this.isLogin,
     required this.onPressed,
+    this.confirmPasswordController,
     this.emailController,
     Key? key,
   }) : super(key: key);
   final TextEditingController usernameController;
   final TextEditingController passwordController;
+  final TextEditingController? confirmPasswordController;
   final TextEditingController? emailController;
   final bool isLogin;
   final void Function() onPressed;
@@ -26,6 +29,7 @@ class CustomInputContainer extends StatefulWidget {
 
 class _CustomInputContainerState extends State<CustomInputContainer> {
   final formKey = GlobalKey<FormState>();
+  UserService userService = UserService();
   ValidationService validationService = ValidationService();
 
   @override
@@ -82,6 +86,17 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                                   widget.passwordController.text,
                                 ),
                         ),
+                        if (!widget.isLogin)
+                          CustomTextInput(
+                            hint: 'confirm password',
+                            controller: widget.confirmPasswordController!,
+                            isPassword: true,
+                            validator:
+                                ValidationService.validateConfirmPassword(
+                              widget.confirmPasswordController!.text,
+                              widget.passwordController.text,
+                            ),
+                          ),
                         if (!widget.isLogin)
                           CustomTextInput(
                             hint: 'email',

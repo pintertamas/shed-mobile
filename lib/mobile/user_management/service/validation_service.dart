@@ -41,6 +41,20 @@ class ValidationService {
         return null;
       };
 
+  static String? Function(String?)? validateConfirmPassword(
+    String? password,
+    String? confirmPassword,
+  ) =>
+      (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password field cannot be empty';
+        }
+        if (value != confirmPassword) {
+          return 'Passwords do not match';
+        }
+        return null;
+      };
+
   static String? Function(String?)? validateEmail(String? value) => (value) {
         if (value == null || value.isEmpty || !_validateEmail(value)) {
           return 'Enter a valid email';
