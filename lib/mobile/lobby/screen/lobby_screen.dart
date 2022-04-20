@@ -209,7 +209,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           );
                         },
                         text: 'Leave lobby',
-                        isRed: true,
+                        color: Colors.red,
                       ),
                     ],
                   ),

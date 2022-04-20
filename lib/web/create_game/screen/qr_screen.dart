@@ -80,7 +80,7 @@ class _QRScreenState extends State<QRScreen> {
                   webSocketService.startGame(widget.name);
                 },
                 text: 'Start game',
-                size: MediaQuery.of(context).size.width * 0.3,
+                width: MediaQuery.of(context).size.width * 0.3,
               ),
             )
           ],

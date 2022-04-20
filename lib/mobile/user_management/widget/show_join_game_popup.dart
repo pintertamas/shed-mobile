@@ -55,7 +55,7 @@ Future showJoinGamePopup({
                         );
                   }
                 },
-                size: MediaQuery.of(context).size.width * 0.5,
+                width: MediaQuery.of(context).size.width * 0.5,
                 text: 'Join',
               ),
             ],

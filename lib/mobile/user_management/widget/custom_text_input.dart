@@ -69,7 +69,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
                     });
                   },
                 )
-              : Icon(null),
+              : const Icon(null),
           errorMaxLines: 11,
         ),
         controller: widget.controller,

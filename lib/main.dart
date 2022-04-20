@@ -51,7 +51,8 @@ void main() {
           return MaterialPageRoute(
             builder: (context) {
               return OtpScreen(
-                username: args!.username,
+                text: args!.text,
+                username: args.username,
                 password: args.password,
                 email: args.email,
                 requestType: args.requestType,

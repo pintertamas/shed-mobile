@@ -55,6 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             context,
                             OtpScreen.routeName,
                             arguments: OtpScreenArguments(
+                              text: 'change your password!',
                               email: emailController.text,
                               password: passwordController.text,
                               requestType: OtpRequestType.forgotPass,

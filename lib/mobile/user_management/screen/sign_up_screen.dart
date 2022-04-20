@@ -68,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context,
                                 OtpScreen.routeName,
                                 arguments: OtpScreenArguments(
+                                  text: 'confirm your registration!',
                                   username: usernameController.text.trim(),
                                   password: passwordController.text.trim(),
                                   email: emailController.text.trim(),

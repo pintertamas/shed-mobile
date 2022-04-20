@@ -30,12 +30,15 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
   final formKey = GlobalKey<FormState>();
   UserService userService = UserService();
   ValidationService validationService = ValidationService();
+  bool disableInteraction = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        if (!disableInteraction) {
+          Navigator.pop(context);
+        }
       },
       child: Scaffold(
         backgroundColor: Colors.brown,
@@ -92,8 +95,8 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                             isPassword: true,
                             validator:
                                 ValidationService.validateConfirmPassword(
-                              widget.confirmPasswordController!.text,
                               widget.passwordController.text,
+                              widget.confirmPasswordController!.text,
                             ),
                           ),
                         if (!widget.isLogin)
@@ -130,11 +133,15 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
                               EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
                           child: CustomButton(
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                widget.onPressed();
+                              if (!disableInteraction) {
+                                disableInteraction = true;
+                                if (formKey.currentState!.validate()) {
+                                  widget.onPressed();
+                                }
+                                disableInteraction = false;
                               }
                             },
-                            size: MediaQuery.of(context).size.width * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.5,
                             text: widget.isLogin ? 'Login' : 'Register',
                           ),
                         ),

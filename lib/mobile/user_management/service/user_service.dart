@@ -13,7 +13,10 @@ class UserService {
 
   late Dio dio;
 
-  Future<bool> checkAvailability(String username, String email) async {
+  Future<bool> checkAvailability(
+    String username,
+    String email,
+  ) async {
     try {
       final response = await dio.get(
         '/check-availability',
@@ -41,7 +44,11 @@ class UserService {
   }
 
   Future<bool> register(
-      String username, String password, String email, int otp) async {
+    String username,
+    String password,
+    String email,
+    int otp,
+  ) async {
     try {
       final response = await dio.post(
         '/register',
@@ -68,7 +75,10 @@ class UserService {
     }
   }
 
-  Future<bool> login(String username, String password) async {
+  Future<bool> login(
+    String username,
+    String password,
+  ) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     try {
@@ -117,7 +127,11 @@ class UserService {
     await prefs.setString('jwtToken', '');
   }
 
-  Future<bool> changePassword(String email, int otp, String newPassword) async {
+  Future<bool> changePassword(
+    String email,
+    int otp,
+    String newPassword,
+  ) async {
     try {
       final response = await dio.put(
         '/users/change-password',

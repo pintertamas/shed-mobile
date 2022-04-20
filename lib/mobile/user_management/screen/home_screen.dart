@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           WelcomeScreen.routeName,
                         );
                       },
-                      isRed: true,
+                      color: Colors.red,
                       text: 'Logout',
                     ),
                   ],

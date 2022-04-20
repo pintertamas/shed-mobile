@@ -46,10 +46,12 @@ class ValidationService {
     String? confirmPassword,
   ) =>
       (value) {
+        print(password);
+        print(confirmPassword);
         if (value == null || value.isEmpty) {
           return 'Password field cannot be empty';
         }
-        if (value != confirmPassword) {
+        if (password != confirmPassword) {
           return 'Passwords do not match';
         }
         return null;
