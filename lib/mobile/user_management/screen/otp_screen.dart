@@ -49,7 +49,11 @@ class _OtpScreenState extends State<OtpScreen> {
       DeviceOrientation.portraitDown,
     ]);
     _timer = Timer.periodic(
-        const Duration(seconds: 1), (Timer t) => setState(() {}));
+      const Duration(seconds: 1),
+      (Timer t) => setState(
+        () {},
+      ),
+    );
     super.initState();
   }
 
@@ -59,7 +63,6 @@ class _OtpScreenState extends State<OtpScreen> {
       _timer?.cancel();
     }
     super.dispose();
-
   }
 
   @override
