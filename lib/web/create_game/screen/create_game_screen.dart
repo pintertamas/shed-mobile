@@ -20,12 +20,12 @@ class _CreateGameScreenState extends State<CreateGameScreen> {
         backgroundColor: Colors.brown,
         body: Center(
           child: Row(
-            children: [
+            children: const [
               Expanded(
                 flex: 2,
-                child: browseGamesWidget(20.0),
+                child: BrowseGamesWidget(paddingSize: 20.0),
               ),
-              const Expanded(
+              Expanded(
                 flex: 3,
                 child: GameConfigWidget(),
               ),
