@@ -14,7 +14,14 @@ class GameService {
 
   late Dio dio;
 
-  Future<String> createGame() async {
+  Future<String> createGame({
+    required bool visibility,
+    required int numberOfDecks,
+    required int numberOfCardsInHand,
+    required bool joker,
+    required dynamic cardRules,
+  }) async {
+    print(cardRules);
     try {
       final response = await dio.post(
         '/game/create',
@@ -29,26 +36,11 @@ class GameService {
           },
         ),
         data: {
-          'numberOfDecks': 1,
-          'numberOfCardsInHand': 3,
-          'numberOfPlayers': 5,
-          'joker': false,
-          'cardRules': [
-            {'number': 1, 'rule': 'None'},
-            {'number': 2, 'rule': 'Jolly_Joker'},
-            {'number': 3, 'rule': 'Invisible'},
-            {'number': 4, 'rule': 'None'},
-            {'number': 5, 'rule': 'None'},
-            {'number': 6, 'rule': 'Reducer'},
-            {'number': 7, 'rule': 'None'},
-            {'number': 8, 'rule': 'Burner'},
-            {'number': 9, 'rule': 'None'},
-            {'number': 10, 'rule': 'None'},
-            {'number': 11, 'rule': 'None'},
-            {'number': 12, 'rule': 'None'},
-            {'number': 13, 'rule': 'None'},
-            {'number': 14, 'rule': 'None'},
-          ],
+          'visibility': visibility,
+          'numberOfDecks': numberOfDecks,
+          'numberOfCardsInHand': numberOfCardsInHand,
+          'joker': joker,
+          'cardRules': cardRules,
         },
       );
       print('response: ${response.data}');

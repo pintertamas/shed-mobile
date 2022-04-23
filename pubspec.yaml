@@ -31,7 +31,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^9.2.0
   pinput: ^2.2.7
-
+  dropdown_button2: ^1.4.0
+  flutter_svg: ^1.0.3
+  sliding_switch: ^1.0.0
+  flutter_neumorphic: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -43,3 +46,4 @@ flutter:
 
   assets:
     - assets/
+    - assets/cards/

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:websocket_mobile/web/create_game/model/create_game_provider.dart';
 import 'package:websocket_mobile/web/create_game/widget/browse_games_widget.dart';
 import 'package:websocket_mobile/web/create_game/widget/game_config_widget.dart';
 
@@ -20,14 +21,20 @@ class _CreateGameScreenState extends State<CreateGameScreen> {
         backgroundColor: Colors.brown,
         body: Center(
           child: Row(
-            children: const [
-              Expanded(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Expanded(
                 flex: 2,
                 child: BrowseGamesWidget(paddingSize: 20.0),
               ),
               Expanded(
                 flex: 3,
-                child: GameConfigWidget(),
+                child: ChangeNotifierProvider(
+                  create: (context) => CreateGameProvider(),
+                  child: const GameConfigWidget(
+                    paddingSize: 20.0,
+                  ),
+                ),
               ),
             ],
           ),
