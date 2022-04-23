@@ -252,7 +252,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                   }
                   gameService
                       .createGame(
-                        visibility: provider.isVisible,
+                        visible: provider.isVisible,
                         numberOfDecks: provider.numberOfDecks,
                         numberOfCardsInHand: provider.numberOfCardsInHand,
                         joker: provider.jokers,

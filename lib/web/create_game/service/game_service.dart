@@ -15,7 +15,7 @@ class GameService {
   late Dio dio;
 
   Future<String> createGame({
-    required bool visibility,
+    required bool visible,
     required int numberOfDecks,
     required int numberOfCardsInHand,
     required bool joker,
@@ -36,7 +36,7 @@ class GameService {
           },
         ),
         data: {
-          'visibility': visibility,
+          'visible': visible,
           'numberOfDecks': numberOfDecks,
           'numberOfCardsInHand': numberOfCardsInHand,
           'joker': joker,

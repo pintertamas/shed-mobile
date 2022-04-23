@@ -31,7 +31,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   Stream<List<Game>> gameStream() async* {
     while (true) {
-      await Future.delayed(const Duration(milliseconds: 30000));
+      await Future.delayed(const Duration(milliseconds: 3000));
       final List<Game> games = await loadGameList();
       yield games;
     }
