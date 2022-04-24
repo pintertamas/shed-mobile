@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:websocket_mobile/mobile/common/provider/connected_player_provider.dart';
 import 'package:websocket_mobile/mobile/common/routing/route_generator.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
@@ -19,34 +17,27 @@ import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart'
 void main() {
   HttpOverrides.global = MyHttpOverrides();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ConnectedPlayerProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialRoute:
-            kIsWeb ? CreateGameScreen.routeName : LoadingScreen.routeName,
-        routes: {
-          // mobile screens
-          WelcomeScreen.routeName: (context) => const WelcomeScreen(),
-          LoadingScreen.routeName: (context) => const LoadingScreen(),
-          //OtpScreen.routeName: (context) => const OtpScreen(),
-          SignUpScreen.routeName: (context) => const SignUpScreen(),
-          LoginScreen.routeName: (context) => const LoginScreen(),
-          ForgotPasswordScreen.routeName: (context) =>
-              const ForgotPasswordScreen(),
-          HomeScreen.routeName: (context) => const HomeScreen(),
-          BrowseGamesScreen.routeName: (context) => const BrowseGamesScreen(),
-          ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute:
+          kIsWeb ? CreateGameScreen.routeName : LoadingScreen.routeName,
+      routes: {
+        // mobile screens
+        WelcomeScreen.routeName: (context) => const WelcomeScreen(),
+        LoadingScreen.routeName: (context) => const LoadingScreen(),
+        //OtpScreen.routeName: (context) => const OtpScreen(),
+        SignUpScreen.routeName: (context) => const SignUpScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        ForgotPasswordScreen.routeName: (context) =>
+            const ForgotPasswordScreen(),
+        HomeScreen.routeName: (context) => const HomeScreen(),
+        BrowseGamesScreen.routeName: (context) => const BrowseGamesScreen(),
+        ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
 
-          // web screens
-          CreateGameScreen.routeName: (context) => const CreateGameScreen()
-        },
-        onGenerateRoute: RouteGenerator.generateRoute,
-      ),
+        // web screens
+        CreateGameScreen.routeName: (context) => const CreateGameScreen()
+      },
+      onGenerateRoute: RouteGenerator.generateRoute,
     ),
   );
 }
