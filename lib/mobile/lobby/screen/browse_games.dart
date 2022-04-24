@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
-import 'package:websocket_mobile/mobile/lobby/widget/custom_stream_builder.dart';
+import 'package:websocket_mobile/web/create_game/widget/browse_games_widget.dart';
 
 class BrowseGamesScreen extends StatefulWidget {
   const BrowseGamesScreen({Key? key}) : super(key: key);
@@ -15,19 +14,6 @@ class BrowseGamesScreen extends StatefulWidget {
 }
 
 class _BrowseGamesScreenState extends State<BrowseGamesScreen> {
-  final Stream<int> _placeholderStream = (() {
-    late final StreamController<int> controller;
-    controller = StreamController<int>(
-      onListen: () async {
-        await Future<void>.delayed(const Duration(seconds: 1));
-        controller.add(1);
-        await Future<void>.delayed(const Duration(seconds: 1));
-        await controller.close();
-      },
-    );
-    return controller.stream;
-  })();
-
   Stream<double> getRandomValues() async* {
     final random = Random(2);
     while (true) {
@@ -40,11 +26,11 @@ class _BrowseGamesScreenState extends State<BrowseGamesScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            const Text('Browse games'),
-            Center(child: customStreamBuilder(getRandomValues())),
-          ],
+        backgroundColor: Colors.brown,
+        body: BrowseGamesWidget(
+          paddingSize: 20.0,
+          buttonWidth: MediaQuery.of(context).size.width * 0.3,
+          buttonHeight: MediaQuery.of(context).size.width * 0.1,
         ),
       ),
     );

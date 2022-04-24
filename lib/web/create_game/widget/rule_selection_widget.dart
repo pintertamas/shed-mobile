@@ -24,13 +24,6 @@ class RuleSelectionWidget extends StatefulWidget {
 class _RuleSelectionWidgetState extends State<RuleSelectionWidget> {
   String? selectedValue;
   late int randomSeed;
-  List<String> items = [
-    'None',
-    'Jolly_Joker',
-    'Reducer',
-    'Invisible',
-    'Burner',
-  ];
 
   String getRandomShape() {
     final List<String> shapes = [
@@ -102,7 +95,7 @@ class _RuleSelectionWidgetState extends State<RuleSelectionWidget> {
                         ),
                       ],
                     ),
-                    items: items
+                    items: provider.items
                         .map(
                           (item) => DropdownMenuItem<String>(
                             value: item,

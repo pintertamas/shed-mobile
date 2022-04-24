@@ -23,9 +23,13 @@ class _CreateGameScreenState extends State<CreateGameScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 2,
-                child: BrowseGamesWidget(paddingSize: 20.0),
+                child: BrowseGamesWidget(
+                  paddingSize: 20.0,
+                  buttonWidth: MediaQuery.of(context).size.width * 0.1,
+                  buttonHeight: MediaQuery.of(context).size.width * 0.025,
+                ),
               ),
               Expanded(
                 flex: 3,

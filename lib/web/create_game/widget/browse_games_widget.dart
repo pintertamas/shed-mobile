@@ -1,15 +1,19 @@
 import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:websocket_mobile/web/create_game/model/game.dart';
 import 'package:websocket_mobile/web/create_game/service/game_service.dart';
 
-import '../model/game.dart';
-
 class BrowseGamesWidget extends StatefulWidget {
-  const BrowseGamesWidget({required this.paddingSize, Key? key})
-      : super(key: key);
+  const BrowseGamesWidget({
+    required this.paddingSize,
+    required this.buttonWidth,
+    required this.buttonHeight,
+    Key? key,
+  }) : super(key: key);
   final double paddingSize;
+  final double buttonWidth;
+  final double buttonHeight;
 
   @override
   State<BrowseGamesWidget> createState() => _BrowseGamesWidgetState();
@@ -91,7 +95,18 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                 child: StreamBuilder<List<Game>>(
                   stream: gameStream(),
                   builder: (context, AsyncSnapshot<List<Game>> snapshot) {
-                    if (snapshot.hasData) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text(
+                          'No games found!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
                       return ListView.builder(
                         itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (BuildContext context, int index) {
@@ -109,10 +124,8 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                 iconColor: Colors.green,
                                 leading: const Icon(FontAwesomeIcons.gamepad),
                                 trailing: AnimatedButton(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.1,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.025,
+                                  width: widget.buttonWidth,
+                                  height: widget.buttonHeight,
                                   color: Colors.green,
                                   onPressed: () {},
                                   child: const Text(
@@ -120,7 +133,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 15,
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
