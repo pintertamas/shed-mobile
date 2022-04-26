@@ -1,6 +1,10 @@
 import 'package:animated_button/animated_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
+import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/game.dart';
 import 'package:websocket_mobile/web/create_game/service/game_service.dart';
 
@@ -21,6 +25,7 @@ class BrowseGamesWidget extends StatefulWidget {
 
 class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
   late GameService gameService;
+  late WebSocketService webSocketService;
   late Future<List<Game>> listOfGames;
 
   Future<List<Game>> loadGameList() async {
@@ -44,6 +49,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
   @override
   void initState() {
     gameService = GameService();
+    webSocketService = WebSocketService();
     listOfGames = loadGameList();
     super.initState();
   }
@@ -127,7 +133,36 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                   width: widget.buttonWidth,
                                   height: widget.buttonHeight,
                                   color: Colors.green,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    webSocketService
+                                        .initStompClient(
+                                          snapshot.data![index].name,
+                                        )
+                                        .then(
+                                          (value) => {
+                                            if (kIsWeb)
+                                              Navigator.pushNamed(
+                                                context,
+                                                LobbyScreen.routeName,
+                                                //TODO it should redirect to the actual table screen that needs to be implemented
+                                                arguments: LobbyScreenArguments(
+                                                  snapshot.data![index].name,
+                                                ),
+                                              )
+                                            else
+                                              {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  LobbyScreen.routeName,
+                                                  arguments:
+                                                      LobbyScreenArguments(
+                                                    snapshot.data![index].name,
+                                                  ),
+                                                ),
+                                              }
+                                          },
+                                        );
+                                  },
                                   child: const Text(
                                     'Join',
                                     style: TextStyle(
