@@ -45,4 +45,3 @@ app.*.map.json
 /android/app/release
 /lib/generated_plugin_registrant.dart
 /lib/mobile/game/model/player.g.dart
-/assets/cards/
