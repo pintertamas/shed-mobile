@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/game/service/game_service.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/validation_service.dart';
-
-import 'custom_button.dart';
-import 'custom_text_input.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
+import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
 Future showJoinGamePopup({
   required BuildContext context,

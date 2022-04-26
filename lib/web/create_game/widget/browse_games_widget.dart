@@ -2,11 +2,13 @@ import 'package:animated_button/animated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/game.dart';
-import 'package:websocket_mobile/web/create_game/service/game_service.dart';
+import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
+import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 
 class BrowseGamesWidget extends StatefulWidget {
   const BrowseGamesWidget({
@@ -27,6 +29,8 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
   late GameService gameService;
   late WebSocketService webSocketService;
   late Future<List<Game>> listOfGames;
+  late DateTime initTime;
+  static const int refreshRate = 3000;
 
   Future<List<Game>> loadGameList() async {
     final List<Game> games = await gameService.getListOfGames();
@@ -40,7 +44,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   Stream<List<Game>> gameStream() async* {
     while (true) {
-      await Future.delayed(const Duration(milliseconds: 3000));
+      await Future.delayed(const Duration(milliseconds: refreshRate));
       final List<Game> games = await loadGameList();
       yield games;
     }
@@ -48,6 +52,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   @override
   void initState() {
+    initTime = DateTime.now();
     gameService = GameService();
     webSocketService = WebSocketService();
     listOfGames = loadGameList();
@@ -56,6 +61,9 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final bool loading =
+        DateTime.now().difference(initTime).inMicroseconds <= refreshRate;
+
     return Padding(
       padding: EdgeInsets.all(widget.paddingSize / 2),
       child: Column(
@@ -102,14 +110,29 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                   stream: gameStream(),
                   builder: (context, AsyncSnapshot<List<Game>> snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(
-                        child: Text(
-                          'No games found!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Text(
+                                loading
+                                    ? 'Looking for games'
+                                    : 'No games found!',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            if (loading)
+                              const CircularProgressIndicator(
+                                color: Colors.green,
+                              ),
+                          ],
                         ),
                       );
                     } else if (snapshot.hasData) {
@@ -134,29 +157,32 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                   height: widget.buttonHeight,
                                   color: Colors.green,
                                   onPressed: () {
+                                    final String gameName =
+                                        snapshot.data![index].name;
+                                    gameService.saveGameName(gameName);
                                     webSocketService
                                         .initStompClient(
-                                          snapshot.data![index].name,
+                                          gameName,
                                         )
                                         .then(
                                           (value) => {
                                             if (kIsWeb)
                                               Navigator.pushNamed(
                                                 context,
-                                                LobbyScreen.routeName,
+                                                QRScreen.routeName,
                                                 //TODO it should redirect to the actual table screen that needs to be implemented
-                                                arguments: LobbyScreenArguments(
-                                                  snapshot.data![index].name,
+                                                arguments: QRScreenArguments(
+                                                  gameName,
                                                 ),
                                               )
                                             else
                                               {
-                                                Navigator.pushNamed(
+                                                Navigator.pushReplacementNamed(
                                                   context,
                                                   LobbyScreen.routeName,
                                                   arguments:
                                                       LobbyScreenArguments(
-                                                    snapshot.data![index].name,
+                                                    gameName,
                                                   ),
                                                 ),
                                               }

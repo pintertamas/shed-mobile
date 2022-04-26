@@ -1,12 +1,12 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_switch/sliding_switch.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/web/create_game/model/card_rule.dart';
 import 'package:websocket_mobile/web/create_game/model/create_game_provider.dart';
 import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
-import 'package:websocket_mobile/web/create_game/service/game_service.dart';
 import 'package:websocket_mobile/web/create_game/widget/rule_selection_widget.dart';
 
 class GameConfigWidget extends StatefulWidget {

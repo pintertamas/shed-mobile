@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/common/stream/connected_player_stream_builder.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/model/player.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
-import 'package:websocket_mobile/mobile/game/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
