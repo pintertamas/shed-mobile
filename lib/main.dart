@@ -13,6 +13,7 @@ import 'package:websocket_mobile/mobile/user_management/screen/sign_up_screen.da
 import 'package:websocket_mobile/mobile/user_management/screen/welcome_screen.dart';
 import 'package:websocket_mobile/my_http_override.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
+import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -35,7 +36,8 @@ void main() {
         ScanGameIdScreen.routeName: (context) => const ScanGameIdScreen(),
 
         // web screens
-        CreateGameScreen.routeName: (context) => const CreateGameScreen()
+        CreateGameScreen.routeName: (context) => const CreateGameScreen(),
+        QRScreen.routeName: (context) => const QRScreen(),
       },
       onGenerateRoute: RouteGenerator.generateRoute,
     ),

@@ -6,9 +6,7 @@ import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
-import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
-import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -48,17 +46,6 @@ class RouteGenerator {
             return GameScreen(
               webSocketService: args!.webSocketService,
               gameId: args.gameId,
-            );
-          },
-        );
-      case QRScreen.routeName:
-        final args = settings.arguments as QRScreenArguments?;
-
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            return QRScreen(
-              name: args?.name ?? 'unknown',
             );
           },
         );

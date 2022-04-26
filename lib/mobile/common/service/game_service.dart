@@ -16,6 +16,16 @@ class GameService {
 
   late Dio dio;
 
+  Future<void> saveGameName(String gameName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('gameName', gameName);
+  }
+
+  static Future<String> getGameName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('gameName') ?? 'unknown';
+  }
+
   Future<String> createGame({
     required bool visible,
     required int numberOfDecks,
@@ -87,16 +97,6 @@ class GameService {
       print(e.response!.data);
       return [];
     }
-  }
-
-  Future<void> saveGameName(String gameName) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('gameName', gameName);
-  }
-
-  Future<String> getGameName() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('gameName') ?? 'unknown';
   }
 
   Future<List<Player>> getListOfPlayers(List<String> connectedUsers) async {

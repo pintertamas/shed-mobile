@@ -7,7 +7,6 @@ import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart'
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/game.dart';
-import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 
 class BrowseGamesWidget extends StatefulWidget {
@@ -171,9 +170,6 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                                 context,
                                                 QRScreen.routeName,
                                                 //TODO it should redirect to the actual table screen that needs to be implemented
-                                                arguments: QRScreenArguments(
-                                                  gameName,
-                                                ),
                                               )
                                             else
                                               {

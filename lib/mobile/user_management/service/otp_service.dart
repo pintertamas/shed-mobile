@@ -5,8 +5,6 @@ import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart'
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 class OtpService {
-  static UserService userService = UserService();
-
   OtpService() {
     final options = BaseOptions(
       baseUrl: 'https://shed-backend.herokuapp.com',
@@ -15,6 +13,8 @@ class OtpService {
     );
     dio = Dio(options);
   }
+
+  static UserService userService = UserService();
 
   late Dio dio;
 
