@@ -31,6 +31,18 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
   late DateTime initTime;
   static const int refreshRate = 3000;
 
+  Future<void> initWebsocketClient(String gameName) async {
+    if (kIsWeb) {
+      return webSocketService.initStompClientOnWeb(
+        gameName,
+      );
+    } else {
+      return webSocketService.initStompClient(
+        gameName,
+      );
+    }
+  }
+
   Future<List<Game>> loadGameList() async {
     final List<Game> games = await gameService.getListOfGames();
     for (final Game game in games) {
@@ -43,9 +55,9 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   Stream<List<Game>> gameStream() async* {
     while (true) {
-      await Future.delayed(const Duration(milliseconds: refreshRate));
       final List<Game> games = await loadGameList();
       yield games;
+      await Future.delayed(const Duration(milliseconds: refreshRate));
     }
   }
 
@@ -159,31 +171,26 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                     final String gameName =
                                         snapshot.data![index].name;
                                     gameService.saveGameName(gameName);
-                                    webSocketService
-                                        .initStompClient(
-                                          gameName,
-                                        )
-                                        .then(
-                                          (value) => {
-                                            if (kIsWeb)
-                                              Navigator.pushNamed(
-                                                context,
-                                                QRScreen.routeName,
-                                                //TODO it should redirect to the actual table screen that needs to be implemented
-                                              )
-                                            else
-                                              {
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  LobbyScreen.routeName,
-                                                  arguments:
-                                                      LobbyScreenArguments(
-                                                    gameName,
-                                                  ),
-                                                ),
-                                              }
-                                          },
-                                        );
+                                    print('joining $gameName...');
+                                    initWebsocketClient(gameName).then(
+                                      (value) => {
+                                        if (kIsWeb)
+                                          Navigator.pushNamed(
+                                            context,
+                                            QRScreen.routeName,
+                                          )
+                                        else
+                                          {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              LobbyScreen.routeName,
+                                              arguments: LobbyScreenArguments(
+                                                gameName,
+                                              ),
+                                            ),
+                                          }
+                                      },
+                                    );
                                   },
                                   child: const Text(
                                     'Join',

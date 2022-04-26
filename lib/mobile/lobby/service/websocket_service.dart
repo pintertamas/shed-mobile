@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -125,9 +126,11 @@ class WebSocketService {
   void joinGame(channel, username) {
     if (!stompClient.connected) return;
 
-    stompClient.send(
-      destination: '/app/join-game/$channel/$username',
-    );
+    if (!kIsWeb) {
+      stompClient.send(
+        destination: '/app/join-game/$channel/$username',
+      );
+    }
     print('Join game signal sent...');
   }
 
@@ -149,7 +152,7 @@ class WebSocketService {
     stompClient.send(
       destination: '/app/start-game/$channel',
     );
-    print('Start game signal sent...');
+    print('Start game signal sent to channel $channel...');
   }
 
   void deactivate() {

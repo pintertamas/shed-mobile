@@ -67,34 +67,45 @@ class _QRScreenState extends State<QRScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        QrImage(
-                          data: gameName,
-                          version: QrVersions.auto,
-                          size: qrHeight,
-                          errorStateBuilder: (cxt, err) {
-                            print(err.toString());
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(30.0),
-                                  child: Icon(
-                                    FontAwesomeIcons.exclamationCircle,
-                                    color: Colors.red,
-                                    size: qrHeight / 4,
-                                  ),
-                                ),
-                                Text(
-                                  'Uh oh! Something went wrong... Try again in a few minutes!',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: qrHeight / 25,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: QrImage(
+                              data: gameName,
+                              version: QrVersions.auto,
+                              size: qrHeight,
+                              foregroundColor: Colors.black,
+                              errorStateBuilder: (cxt, err) {
+                                print(err.toString());
+                                return Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(30.0),
+                                      child: Icon(
+                                        FontAwesomeIcons.exclamationCircle,
+                                        color: Colors.red,
+                                        size: qrHeight / 4,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Uh oh! Something went wrong... Try again in a few minutes!',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: qrHeight / 25,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.02,

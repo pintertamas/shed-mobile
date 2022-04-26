@@ -6,11 +6,11 @@ import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 class ConnectedPlayerStreamBuilder extends StatefulWidget {
   const ConnectedPlayerStreamBuilder({
     required this.webSocketService,
-    required this.connectedUsers,
+    this.connectedUsers,
     Key? key,
   }) : super(key: key);
   final WebSocketService webSocketService;
-  final List<String> connectedUsers;
+  final List<String>? connectedUsers;
 
   @override
   State<ConnectedPlayerStreamBuilder> createState() =>
@@ -19,6 +19,14 @@ class ConnectedPlayerStreamBuilder extends StatefulWidget {
 
 class _ConnectedPlayerStreamBuilderState
     extends State<ConnectedPlayerStreamBuilder> {
+  late final List<String> connectedUsers;
+
+  @override
+  void initState() {
+    connectedUsers = widget.connectedUsers ?? [];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<WebSocketEvent>(
@@ -30,17 +38,17 @@ class _ConnectedPlayerStreamBuilderState
         if (snapshot.hasData && snapshot.data != null) {
           if (snapshot.data!.type == 'join') {
             final String connectedUser = snapshot.data!.message;
-            if (!widget.connectedUsers.contains(connectedUser)) {
-              widget.connectedUsers.add(connectedUser);
+            if (!connectedUsers.contains(connectedUser)) {
+              connectedUsers.add(connectedUser);
             }
           } else if (snapshot.data!.type == 'leave') {
             final String leavingUser = snapshot.data!.message;
-            if (widget.connectedUsers.contains(leavingUser)) {
-              widget.connectedUsers.remove(leavingUser);
+            if (connectedUsers.contains(leavingUser)) {
+              connectedUsers.remove(leavingUser);
             }
           }
         }
-        if (widget.connectedUsers.isEmpty) {
+        if (connectedUsers.isEmpty) {
           return const Center(
             child: Text(
               'No players joined yet!',
@@ -53,7 +61,7 @@ class _ConnectedPlayerStreamBuilderState
           );
         } else {
           return ListView.builder(
-            itemCount: widget.connectedUsers.length,
+            itemCount: connectedUsers.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -76,7 +84,7 @@ class _ConnectedPlayerStreamBuilderState
                         FontAwesomeIcons.userAlt,
                       ),
                       title: Text(
-                        widget.connectedUsers[index],
+                        connectedUsers[index],
                         style: const TextStyle(
                           color: Color.fromRGBO(
                             29,

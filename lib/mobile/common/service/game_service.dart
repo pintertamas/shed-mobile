@@ -103,7 +103,7 @@ class GameService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String jwtToken = prefs.getString('jwtToken')!;
     final String gameName = await getGameName();
-    print(gameName);
+    print('Connecting to $gameName');
 
     try {
       final response = await dio.get(

@@ -26,7 +26,7 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.1,
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -49,7 +49,7 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
                       ],
                     ),
                     child: const Text(
-                      'Browse games',
+                      'Connected players',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -69,7 +69,6 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
                   color: Colors.green,
                   child: ConnectedPlayerStreamBuilder(
                     webSocketService: widget.websocketService,
-                    connectedUsers: [],
                   ),
                 ),
               ),
@@ -80,3 +79,4 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
     );
   }
 }
+
