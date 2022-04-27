@@ -53,9 +53,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     userService = UserService();
     webSocketService = widget.webSocketService ?? WebSocketService();
 
-    if (kIsWeb) {
-      webSocketService.initStompClientOnWeb(widget.gameId);
-    } else {
+    if (!kIsWeb) {
       webSocketService.initStompClient(widget.gameId);
     }
 

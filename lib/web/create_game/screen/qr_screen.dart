@@ -21,15 +21,20 @@ class _QRScreenState extends State<QRScreen> {
   bool errorLoading = false;
   late WebSocketService webSocketService;
   late Future<String> loadGameName;
+  late bool isLoading;
 
   Future<String> getGameName() async {
     final String gameName = await GameService.getGameName();
-    webSocketService.initStompClientOnWeb(gameName);
+    if (!isLoading) {
+      await webSocketService.initStompClientOnWeb(gameName);
+      isLoading = true;
+    }
     return gameName;
   }
 
   @override
   void initState() {
+    isLoading = false;
     webSocketService = WebSocketService();
     loadGameName = getGameName();
     super.initState();

@@ -51,6 +51,7 @@ class WebSocketService {
   }
 
   Future<void> initStompClientOnWeb(String channel) async {
+    print('initializing stomp client on the web');
     stompClient = StompClient(
       config: StompConfig.SockJS(
         url: 'https://shed-backend.herokuapp.com/shed',
