@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/common/stream/connected_player_stream_builder.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
-import 'package:websocket_mobile/mobile/game/model/player.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
@@ -11,11 +11,13 @@ import 'package:websocket_mobile/mobile/user_management/service/user_service.dar
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 
 class LobbyScreen extends StatefulWidget {
-  const LobbyScreen({
+  LobbyScreen({
     required this.gameId,
+    this.webSocketService,
     Key? key,
   }) : super(key: key);
   final String gameId;
+  WebSocketService? webSocketService;
 
   static const routeName = '/lobby';
 
@@ -31,19 +33,10 @@ class _LobbyScreenState extends State<LobbyScreen> {
   late Future<void> listPlayers;
   List<String> connectedUsers = [];
 
-  Future<void> loadConnectedUsers() async {
-    final List<Player> players =
-        await gameService.getListOfPlayers(connectedUsers);
-    for (final Player player in players) {
-      if (!connectedUsers.contains(player.username)) {
-        connectedUsers.add(player.username);
-      }
-    }
-  }
-
   void _checkGameStart() {
     webSocketService.webSocketStream.listen((snapshot) {
       if (snapshot.type == 'game-start') {
+        print('received game-start signal');
         Navigator.of(context).pushReplacementNamed(
           GameScreen.routeName,
           arguments: GameScreenArguments(
@@ -58,10 +51,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
   @override
   void initState() {
     userService = UserService();
-    webSocketService = WebSocketService();
-    webSocketService.initStompClient(widget.gameId);
+    webSocketService = widget.webSocketService ?? WebSocketService();
+
+    if (kIsWeb) {
+      webSocketService.initStompClientOnWeb(widget.gameId);
+    } else {
+      webSocketService.initStompClient(widget.gameId);
+    }
+
     gameService = GameService();
-    listPlayers = loadConnectedUsers();
+    listPlayers = gameService.loadConnectedUsers(connectedUsers);
     Future.delayed(Duration.zero, _checkGameStart);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -94,7 +93,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
           );
         } else {
           return Scaffold(
-            backgroundColor: Colors.brown,
+            backgroundColor: kIsWeb ? Colors.green : Colors.brown,
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -131,22 +130,23 @@ class _LobbyScreenState extends State<LobbyScreen> {
                           }
                         },
                       ),
-                      CustomButton(
-                        onPressed: () {
-                          webSocketService.leaveGame().then(
-                                (value) => {
-                                  webSocketService.deactivate(),
-                                  print('Leaving lobby...'),
-                                },
-                              );
-                          Navigator.pushReplacementNamed(
-                            context,
-                            HomeScreen.routeName,
-                          );
-                        },
-                        text: 'Leave lobby',
-                        color: Colors.red,
-                      ),
+                      if (!kIsWeb)
+                        CustomButton(
+                          onPressed: () {
+                            webSocketService.leaveGame().then(
+                                  (value) => {
+                                    webSocketService.deactivate(),
+                                    print('Leaving lobby...'),
+                                  },
+                                );
+                            Navigator.pushReplacementNamed(
+                              context,
+                              HomeScreen.routeName,
+                            );
+                          },
+                          text: 'Leave lobby',
+                          color: Colors.red,
+                        ),
                     ],
                   ),
                 ),

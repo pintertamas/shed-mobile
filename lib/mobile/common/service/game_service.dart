@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocket_mobile/mobile/game/model/player.dart';
 
@@ -26,6 +27,15 @@ class GameService {
     return prefs.getString('gameName') ?? 'unknown';
   }
 
+  Future<void> loadConnectedUsers(List<String> connectedUsers) async {
+    final List<Player> players = await getListOfPlayers(connectedUsers);
+    for (final Player player in players) {
+      if (!connectedUsers.contains(player.username)) {
+        connectedUsers.add(player.username);
+      }
+    }
+  }
+
   Future<String> createGame({
     required bool visible,
     required int numberOfDecks,
@@ -33,7 +43,7 @@ class GameService {
     required bool joker,
     required dynamic cardRules,
   }) async {
-    print(cardRules);
+    print('cardRules: $cardRules');
     try {
       final response = await dio.post(
         '/game/create',
@@ -55,7 +65,7 @@ class GameService {
           'cardRules': cardRules,
         },
       );
-      print('response: ${response.data}');
+      print('response data: ${response.data}');
       if (response.data == null) return '';
 
       if (response.statusCode == 200) {
@@ -64,7 +74,7 @@ class GameService {
         return '';
       }
     } on DioError catch (e) {
-      print(e.error ?? 'Error');
+      print('error: ${e.error ?? 'Error'}');
       return 'error';
     }
   }
@@ -94,26 +104,34 @@ class GameService {
       }
     } on DioError catch (e) {
       print('game list status code: ${e.response!.statusCode}');
-      print(e.response!.data);
+      print('response data: ${e.response!.data ?? 'Error'}');
       return [];
     }
   }
 
   Future<List<Player>> getListOfPlayers(List<String> connectedUsers) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String jwtToken = prefs.getString('jwtToken')!;
+    final String? jwtToken = prefs.getString('jwtToken');
     final String gameName = await getGameName();
     print('Connecting to $gameName');
+
+    final Options webOptions = Options(
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    final Options options = Options(
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      },
+    );
 
     try {
       final response = await dio.get(
         '/player/list/',
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $jwtToken',
-          },
-        ),
+        options: kIsWeb ? webOptions : options,
         queryParameters: {
           'gameName': gameName,
         },
@@ -129,9 +147,9 @@ class GameService {
         throw DioError;
       }
     } on DioError catch (e) {
-      print(e.message);
+      print('error: ${e.message}');
       print('player list status code: ${e.response?.statusCode}');
-      print(e.response!.data);
+      print('response data: ${e.response!.data}');
       return [];
     }
   }

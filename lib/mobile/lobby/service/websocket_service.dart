@@ -37,11 +37,11 @@ class WebSocketService {
           print('unhandledError: $error');
         },
         beforeConnect: () async {
-          print('waiting to connect...');
+          print('waiting to connect to $channel...');
           await Future.delayed(const Duration(milliseconds: 200));
           print('connecting...');
         },
-        onWebSocketError: (dynamic error) => print(error.toString()),
+        onWebSocketError: (dynamic error) => print('webSocketError: $error'),
         stompConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
         webSocketConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
       ),
@@ -67,11 +67,11 @@ class WebSocketService {
           print('unhandledError: $error');
         },
         beforeConnect: () async {
-          print('waiting to connect...');
+          print('waiting to connect to $channel...');
           await Future.delayed(const Duration(milliseconds: 200));
           print('connecting...');
         },
-        onWebSocketError: (dynamic error) => print(error.toString()),
+        onWebSocketError: (dynamic error) => print('webSocketError: $error'),
       ),
     );
 

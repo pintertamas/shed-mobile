@@ -38,7 +38,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response?.statusCode ?? e.message);
+      print('error: ${e.response!.statusCode ?? e.message}');
       return false;
     }
   }
@@ -70,7 +70,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print('error: ${e.response!.statusCode ?? 'Error'}');
       return false;
     }
   }
@@ -97,7 +97,7 @@ class UserService {
       if (response.data == null) return false;
 
       print('body: ${response.data}');
-      print(response.statusCode);
+      print('error: ${response.statusCode ?? 'Error'}');
       final String jwtToken = response.data!['jwtToken'] as String;
       await prefs.setString('jwtToken', jwtToken);
 
@@ -107,7 +107,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response?.statusCode ?? 'Error');
+      print('error: ${e.response!.statusCode ?? 'Error'}');
       return false;
     }
   }
@@ -148,7 +148,7 @@ class UserService {
       );
       if (response.data == null) return false;
 
-      print('body: ${response.data}');
+      print('response data: ${response.data}');
 
       if (response.statusCode == 200) {
         return true;
@@ -156,10 +156,10 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response?.statusCode ?? e.message);
+      print('error: ${e.response!.statusCode ?? 'Error'}');
       return false;
     } on Exception catch (e) {
-      print(e.toString());
+      print('error: $e');
       return false;
     }
   }

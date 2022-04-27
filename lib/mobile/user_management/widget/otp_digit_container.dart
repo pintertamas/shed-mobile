@@ -50,7 +50,6 @@ class _OtpDigitContainerState extends State<OtpDigitContainer> {
       ),
       onChanged: (value) {
         if (value.length == 6) {
-          print(value);
           if (widget.requestType == OtpRequestType.register) {
             OtpService.register(
               username: widget.username!,

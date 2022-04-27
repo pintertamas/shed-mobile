@@ -37,7 +37,7 @@ class OtpService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print('error: ${e.response!.statusCode ?? 'Error'}');
       return false;
     }
   }
@@ -45,7 +45,7 @@ class OtpService {
   Future<bool> checkTokenValidity() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? jwtToken = prefs.getString('jwtToken');
-    print(jwtToken);
+    print('jwtToken: $jwtToken');
 
     if (jwtToken == null || jwtToken == '') return false;
 
@@ -62,7 +62,7 @@ class OtpService {
       if (response.data == null) return false;
 
       print('token: $jwtToken');
-      print('body: ${response.data}');
+      print('response data: ${response.data}');
 
       if (response.statusCode == 200) {
         return true;
@@ -70,10 +70,10 @@ class OtpService {
         return false;
       }
     } on DioError catch (e) {
-      print(e.response!.statusCode ?? 'Error');
+      print('error: ${e.response!.statusCode ?? 'Error'}');
       return false;
     } on Exception catch (e) {
-      print(e.toString());
+      print('error: $e');
       return false;
     }
   }

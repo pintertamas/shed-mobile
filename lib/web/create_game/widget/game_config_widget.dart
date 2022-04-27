@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_switch/sliding_switch.dart';
@@ -27,187 +28,204 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
     final width =
         MediaQuery.of(context).size.width * 3 / 5 - widget.paddingSize * 2;
 
+    final List<Widget> settingWidgets = [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Visible to anyone',
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SlidingSwitch(
+              value: !provider.isVisible,
+              width: width / 6,
+              textOff: 'yes',
+              textOn: 'no',
+              colorOff: Colors.white,
+              colorOn: Colors.white,
+              buttonColor: Colors.brown,
+              inactiveColor: Colors.white,
+              background: Colors.green,
+              animationDuration: const Duration(milliseconds: 100),
+              onChanged: (bool value) {
+                provider.isVisible = !value;
+              },
+              onTap: () {},
+              onSwipe: () {},
+              onDoubleTap: () {},
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Number of decks',
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SlidingSwitch(
+              value: provider.numberOfDecks == 2,
+              width: width / 6,
+              textOff: '1',
+              textOn: '2',
+              colorOff: Colors.white,
+              colorOn: Colors.white,
+              buttonColor: Colors.brown,
+              inactiveColor: Colors.white,
+              background: Colors.green,
+              animationDuration: const Duration(milliseconds: 100),
+              onChanged: (bool value) {
+                if (value) {
+                  provider.numberOfDecks = 2;
+                } else {
+                  provider.numberOfDecks = 1;
+                }
+              },
+              onTap: () {},
+              onSwipe: () {},
+              onDoubleTap: () {},
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Play with jokers',
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SlidingSwitch(
+              value: !provider.jokers,
+              width: width / 6,
+              textOff: 'yes',
+              textOn: 'no',
+              colorOff: Colors.white,
+              colorOn: Colors.white,
+              buttonColor: Colors.brown,
+              inactiveColor: Colors.white,
+              background: Colors.green,
+              animationDuration: const Duration(milliseconds: 100),
+              onChanged: (bool value) {
+                provider.jokers = !value;
+                setState(() {});
+              },
+              onTap: () {},
+              onSwipe: () {},
+              onDoubleTap: () {},
+            ),
+          ),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Number of cards per hand',
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              provider.numberOfCardsInHand.toString(),
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: width / 6,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: NeumorphicSlider(
+                value: _currentSliderValue.round().roundToDouble(),
+                min: 3,
+                max: 5,
+                style: const SliderStyle(
+                  accent: Colors.brown,
+                  variant: Colors.green,
+                ),
+                onChanged: (double value) {
+                  setState(() {
+                    _currentSliderValue = value;
+                    provider.numberOfCardsInHand = value.round();
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
+      )
+    ];
+
     return Padding(
       padding: EdgeInsets.all(widget.paddingSize / 2),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: widget.paddingSize / 2),
-            child: Container(
-              width: width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.green.shade50,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Visible to anyone',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SlidingSwitch(
-                            value: !provider.isVisible,
-                            width: width / 6,
-                            textOff: 'yes',
-                            textOn: 'no',
-                            colorOff: Colors.white,
-                            colorOn: Colors.white,
-                            buttonColor: Colors.brown,
-                            inactiveColor: Colors.white,
-                            background: Colors.green,
-                            animationDuration:
-                                const Duration(milliseconds: 100),
-                            onChanged: (bool value) {
-                              provider.isVisible = !value;
-                              print(provider.isVisible);
-                            },
-                            onTap: () {},
-                            onSwipe: () {},
-                            onDoubleTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Number of decks',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SlidingSwitch(
-                            value: provider.numberOfDecks == 2,
-                            width: width / 6,
-                            textOff: '1',
-                            textOn: '2',
-                            colorOff: Colors.white,
-                            colorOn: Colors.white,
-                            buttonColor: Colors.brown,
-                            inactiveColor: Colors.white,
-                            background: Colors.green,
-                            animationDuration:
-                                const Duration(milliseconds: 100),
-                            onChanged: (bool value) {
-                              if (value) {
-                                provider.numberOfDecks = 2;
-                              } else {
-                                provider.numberOfDecks = 1;
-                              }
-                            },
-                            onTap: () {},
-                            onSwipe: () {},
-                            onDoubleTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Play with jokers',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SlidingSwitch(
-                            value: !provider.jokers,
-                            width: width / 6,
-                            textOff: 'yes',
-                            textOn: 'no',
-                            colorOff: Colors.white,
-                            colorOn: Colors.white,
-                            buttonColor: Colors.brown,
-                            inactiveColor: Colors.white,
-                            background: Colors.green,
-                            animationDuration:
-                                const Duration(milliseconds: 100),
-                            onChanged: (bool value) {
-                              provider.jokers = !value;
-                              print(provider.jokers);
-                              setState(() {});
-                            },
-                            onTap: () {},
-                            onSwipe: () {},
-                            onDoubleTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Number of cards per hand',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            provider.numberOfCardsInHand.toString(),
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: width / 6,
-                          child: NeumorphicSlider(
-                            value: _currentSliderValue.round().roundToDouble(),
-                            min: 3,
-                            max: 5,
-                            style: const SliderStyle(
-                              accent: Colors.brown,
-                              variant: Colors.green,
-                            ),
-                            onChanged: (double value) {
-                              setState(() {
-                                _currentSliderValue = value;
-                                provider.numberOfCardsInHand = value.round();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
+          SizedBox(
+            height: width > 1000 ? width / 7 : width / 3,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: widget.paddingSize / 2),
+              child: Container(
+                width: width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.green.shade50,
+                ),
+                child: GridView.builder(
+                  controller: ScrollController(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: width > 1000
+                        ? 4
+                        : width > 800
+                            ? 3
+                            : width > 650
+                                ? 2
+                                : 1,
+                    childAspectRatio: 2,
+                  ),
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int i) {
+                    return settingWidgets[i];
+                  },
                 ),
               ),
             ),
@@ -223,8 +241,12 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                 ),
                 child: GridView.builder(
                   controller: ScrollController(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: width > 1000
+                        ? 3
+                        : width > 600
+                            ? 2
+                            : 1,
                     childAspectRatio: 3,
                   ),
                   itemCount: provider.jokers ? 14 : 13,
@@ -263,7 +285,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                           if (gameName != '' && gameName != 'error')
                             {
                               gameService.saveGameName(gameName),
-                              Navigator.pushNamed(
+                              Navigator.pushReplacementNamed(
                                 context,
                                 QRScreen.routeName,
                               ),

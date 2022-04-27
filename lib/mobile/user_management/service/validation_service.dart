@@ -46,8 +46,8 @@ class ValidationService {
     String? confirmPassword,
   ) =>
       (value) {
-        print(password);
-        print(confirmPassword);
+        print('password: $password');
+        print('password: $confirmPassword');
         if (value == null || value.isEmpty) {
           return 'Password field cannot be empty';
         }

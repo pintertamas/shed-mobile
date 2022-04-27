@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/common/stream/connected_player_stream_builder.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 
@@ -14,6 +15,17 @@ class ConnectedPlayersWidget extends StatefulWidget {
 }
 
 class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
+  late GameService gameService;
+  late Future<void> listPlayers;
+  List<String> connectedUsers = [];
+
+  @override
+  void initState() {
+    gameService = GameService();
+    listPlayers = gameService.loadConnectedUsers(connectedUsers);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -67,8 +79,21 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
                   width: MediaQuery.of(context).size.width / 4,
                   height: MediaQuery.of(context).size.height * 0.8,
                   color: Colors.green,
-                  child: ConnectedPlayerStreamBuilder(
-                    webSocketService: widget.websocketService,
+                  child: FutureBuilder<void>(
+                    future: listPlayers,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ConnectedPlayerStreamBuilder(
+                          webSocketService: widget.websocketService,
+                        );
+                      } else {
+                        return const Center(
+                          child: Text(
+                            'Loading connected players',
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
               ),
@@ -79,4 +104,3 @@ class _ConnectedPlayersWidgetState extends State<ConnectedPlayersWidget> {
     );
   }
 }
-
