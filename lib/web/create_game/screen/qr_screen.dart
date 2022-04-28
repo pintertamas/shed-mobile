@@ -7,6 +7,7 @@ import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
+import 'package:websocket_mobile/web/game/game_screen_web.dart';
 
 class QRScreen extends StatefulWidget {
   const QRScreen({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class _QRScreenState extends State<QRScreen> {
   late WebSocketService webSocketService;
   late Future<String> loadGameName;
   late bool isLoading;
+  bool enabled = true;
 
   Future<String> getGameName() async {
     final String gameName = await GameService.getGameName();
@@ -95,7 +97,11 @@ class _QRScreenState extends State<QRScreen> {
                                           5,
                                         ),
                                         color: const Color.fromRGBO(
-                                            57, 131, 60, 1.0),
+                                          57,
+                                          131,
+                                          60,
+                                          1.0,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -113,7 +119,8 @@ class _QRScreenState extends State<QRScreen> {
                           ),
                           Padding(
                             padding: EdgeInsets.all(
-                                MediaQuery.of(context).size.height * 0.05),
+                              MediaQuery.of(context).size.height * 0.05,
+                            ),
                             child: SingleChildScrollView(
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
@@ -202,8 +209,17 @@ class _QRScreenState extends State<QRScreen> {
                         Padding(
                           padding: const EdgeInsets.all(30.0),
                           child: CustomButton(
+                            enabled: enabled,
                             onPressed: () {
+                              if (!enabled) return;
+                              setState(() {
+                                enabled = false;
+                              });
                               webSocketService.startGame(gameName);
+                              Navigator.pushReplacementNamed(
+                                context,
+                                GameScreenWeb.routeName,
+                              );
                             },
                             text: 'Start game',
                             width: MediaQuery.of(context).size.width * 0.3,
