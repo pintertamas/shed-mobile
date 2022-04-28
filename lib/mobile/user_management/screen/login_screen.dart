@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   UserService userService = UserService();
+  bool enabled = true;
 
   @override
   void initState() {
@@ -34,7 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
       usernameController: usernameController,
       passwordController: passwordController,
       isLogin: true,
+      enabled: enabled,
       onPressed: () async {
+        if (!enabled) return;
+        setState(() {
+          enabled = false;
+        });
         print(
           'Login> username: ${usernameController.text} password: ${passwordController.text}',
         );
@@ -56,6 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 else
                   {
+                    setState(() {
+                      enabled = true;
+                    }),
                     errorMessagePopup(
                       context,
                       'The username/password combination is incorrect!',

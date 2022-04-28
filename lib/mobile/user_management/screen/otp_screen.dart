@@ -144,9 +144,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         text: (secondsUntilNextRefresh > 0)
                             ? '$secondsUntilNextRefresh'
                             : 'Resend code',
-                        color: (secondsUntilNextRefresh > 0)
-                            ? Colors.grey
-                            : Colors.green,
+                        enabled: !(secondsUntilNextRefresh > 0),
                         width: MediaQuery.of(context).size.width * 0.3,
                         onPressed: () {
                           if (DateTime.now()

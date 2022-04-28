@@ -6,11 +6,12 @@ import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dar
 import 'package:websocket_mobile/mobile/user_management/widget/custom_text_input.dart';
 
 class CustomInputContainer extends StatefulWidget {
-  const CustomInputContainer({
+  CustomInputContainer({
     required this.usernameController,
     required this.passwordController,
     required this.isLogin,
     required this.onPressed,
+    required this.enabled,
     this.confirmPasswordController,
     this.emailController,
     Key? key,
@@ -21,6 +22,7 @@ class CustomInputContainer extends StatefulWidget {
   final TextEditingController? emailController;
   final bool isLogin;
   final void Function() onPressed;
+  bool enabled;
 
   @override
   State<CustomInputContainer> createState() => _CustomInputContainerState();
@@ -30,13 +32,12 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
   final formKey = GlobalKey<FormState>();
   UserService userService = UserService();
   ValidationService validationService = ValidationService();
-  bool disableInteraction = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (!disableInteraction) {
+        if (widget.enabled) {
           Navigator.pop(context);
         }
       },
@@ -49,103 +50,112 @@ class _CustomInputContainerState extends State<CustomInputContainer> {
               onTap: () {
                 // its needed so the context wont pop on a tap on the container
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.white70,
-                      spreadRadius: 3,
-                      offset: Offset(1.5, 3),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomTextInput(
-                          hint: 'username',
-                          controller: widget.usernameController,
-                          validator: ValidationService.validateUsername(
-                            widget.usernameController.text,
-                          ),
-                        ),
-                        CustomTextInput(
-                          hint: 'password',
-                          controller: widget.passwordController,
-                          isPassword: true,
-                          validator: widget.isLogin
-                              ? ValidationService.validateLoginPassword(
-                                  widget.passwordController.text,
-                                )
-                              : ValidationService.validateRegisterPassword(
-                                  widget.passwordController.text,
-                                ),
-                        ),
-                        if (!widget.isLogin)
+              child: SingleChildScrollView(
+                clipBehavior: Clip.none,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white70,
+                        spreadRadius: 3,
+                        offset: Offset(1.5, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           CustomTextInput(
-                            hint: 'confirm password',
-                            controller: widget.confirmPasswordController!,
+                            hint: 'username',
+                            controller: widget.usernameController,
+                            validator: ValidationService.validateUsername(
+                              widget.usernameController.text,
+                            ),
+                          ),
+                          CustomTextInput(
+                            hint: 'password',
+                            controller: widget.passwordController,
                             isPassword: true,
-                            validator:
-                                ValidationService.validateConfirmPassword(
-                              widget.passwordController.text,
-                              widget.confirmPasswordController!.text,
-                            ),
+                            validator: widget.isLogin
+                                ? ValidationService.validateLoginPassword(
+                                    widget.passwordController.text,
+                                  )
+                                : ValidationService.validateRegisterPassword(
+                                    widget.passwordController.text,
+                                  ),
                           ),
-                        if (!widget.isLogin)
-                          CustomTextInput(
-                            hint: 'email',
-                            controller: widget.emailController!,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: ValidationService.validateEmail(
-                              widget.emailController!.text,
+                          if (!widget.isLogin)
+                            CustomTextInput(
+                              hint: 'confirm password',
+                              controller: widget.confirmPasswordController!,
+                              isPassword: true,
+                              validator:
+                                  ValidationService.validateConfirmPassword(
+                                widget.passwordController.text,
+                                widget.confirmPasswordController!.text,
+                              ),
                             ),
-                          ),
-                        if (widget.isLogin)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  ForgotPasswordScreen.routeName,
-                                );
-                              },
-                              child: const Text(
-                                'Forgot password',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.brown,
+                          if (!widget.isLogin)
+                            CustomTextInput(
+                              hint: 'email',
+                              controller: widget.emailController!,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: ValidationService.validateEmail(
+                                widget.emailController!.text,
+                              ),
+                            ),
+                          if (widget.isLogin)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ForgotPasswordScreen.routeName,
+                                  );
+                                },
+                                child: const Text(
+                                  'Forgot password',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.brown,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: widget.isLogin ? 0.0 : 20.0),
-                          child: CustomButton(
-                            onPressed: () {
-                              if (!disableInteraction) {
-                                disableInteraction = true;
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: widget.isLogin ? 0.0 : 20.0,
+                            ),
+                            child: CustomButton(
+                              enabled: widget.enabled,
+                              onPressed: () async {
+                                if (!widget.enabled) return;
+                                setState(() {
+                                  widget.enabled = false;
+                                });
                                 if (formKey.currentState!.validate()) {
                                   widget.onPressed();
+                                  //enabled = true;
+                                } else {
+                                  widget.enabled = true;
                                 }
-                                disableInteraction = false;
-                              }
-                            },
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            text: widget.isLogin ? 'Login' : 'Register',
+                                setState(() {});
+                              },
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              text: widget.isLogin ? 'Login' : 'Register',
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

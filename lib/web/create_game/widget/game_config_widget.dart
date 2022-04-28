@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_switch/sliding_switch.dart';
@@ -21,6 +20,13 @@ class GameConfigWidget extends StatefulWidget {
 class _GameConfigWidgetState extends State<GameConfigWidget> {
   GameService gameService = GameService();
   double _currentSliderValue = 3;
+  late bool enabled;
+
+  @override
+  void initState() {
+    enabled = true;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +270,12 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
             padding: EdgeInsets.only(top: widget.paddingSize / 2),
             child: Center(
               child: CustomButton(
+                enabled: enabled,
                 onPressed: () async {
+                  if (!enabled) return;
+                  setState(() {
+                    enabled = false;
+                  });
                   final List<CardRule> cardRules = [];
                   for (int i = 0; i < provider.rules.length; i++) {
                     cardRules.add(
@@ -289,7 +300,11 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                                 context,
                                 QRScreen.routeName,
                               ),
-                            },
+                            }
+                          else
+                            {
+                              enabled = true,
+                            }
                         },
                       );
                 },

@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailController = TextEditingController();
   UserService userService = UserService();
   OtpService otpService = OtpService();
+  bool enabled = true;
 
   @override
   void initState() {
@@ -42,7 +43,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       confirmPasswordController: confirmPasswordController,
       emailController: emailController,
       isLogin: false,
+      enabled: enabled,
       onPressed: () async {
+        if (!enabled) return;
+        setState(() {
+          enabled = false;
+        });
         print(
           'Sign up>\nusername: ${usernameController.text}\n'
           'password: ${passwordController.text}\n'
@@ -80,6 +86,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                 else
                   {
+                    setState(() {
+                      enabled = true;
+                    }),
                     errorMessagePopup(
                       context,
                       'This username or email is already in use',
