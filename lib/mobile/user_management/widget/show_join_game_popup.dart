@@ -63,7 +63,7 @@ Future showJoinGamePopup({
                               context,
                               LobbyScreen.routeName,
                               arguments: LobbyScreenArguments(
-                                gameIdController.text.trim(),
+                                gameId: gameIdController.text.trim(),
                               ),
                             ),
                           },

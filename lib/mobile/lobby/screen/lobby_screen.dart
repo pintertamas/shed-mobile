@@ -51,9 +51,12 @@ class _LobbyScreenState extends State<LobbyScreen> {
   @override
   void initState() {
     userService = UserService();
-    webSocketService = widget.webSocketService ?? WebSocketService();
+    final WebSocketService newWSS = WebSocketService();
+    final int newWSSHash = newWSS.hashCode;
+    webSocketService = widget.webSocketService ?? newWSS;
 
-    if (!kIsWeb) {
+    print('on lobby screen with ${webSocketService.hashCode}');
+    if (webSocketService.hashCode == newWSSHash) {
       webSocketService.initStompClient(widget.gameId);
     }
 

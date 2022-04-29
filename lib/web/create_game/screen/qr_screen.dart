@@ -28,7 +28,7 @@ class _QRScreenState extends State<QRScreen> {
   Future<String> getGameName() async {
     final String gameName = await GameService.getGameName();
     if (!isLoading) {
-      await webSocketService.initStompClientOnWeb(gameName);
+      await webSocketService.initStompClient(gameName);
       isLoading = true;
     }
     return gameName;

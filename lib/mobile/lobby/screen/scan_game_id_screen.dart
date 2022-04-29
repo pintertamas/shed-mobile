@@ -108,7 +108,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
                       context,
                       LobbyScreen.routeName,
                       arguments: LobbyScreenArguments(
-                        qrcode.code!,
+                        gameId: qrcode.code!,
                       ),
                     ),
                   },

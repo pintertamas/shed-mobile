@@ -15,14 +15,15 @@ class WebSocketService {
 
   Future<void> initStompClient(String channel) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String jwtToken = prefs.getString('jwtToken')!;
-    final String username = prefs.getString('username')!;
+    final String jwtToken = prefs.getString('jwtToken') ?? '';
+    final String username = prefs.getString('username') ?? '';
 
     stompClient = StompClient(
       config: StompConfig.SockJS(
         url: 'https://shed-backend.herokuapp.com/shed',
         onConnect: (_) {
           _onConnect(_, channel);
+          if (kIsWeb) return;
           webSocketStream.add(WebSocketEvent('connect', username));
           joinGame(channel, username);
         },
@@ -42,37 +43,10 @@ class WebSocketService {
           print('connecting...');
         },
         onWebSocketError: (dynamic error) => print('webSocketError: $error'),
-        stompConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
-        webSocketConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
-      ),
-    );
-
-    _activate();
-  }
-
-  Future<void> initStompClientOnWeb(String channel) async {
-    print('initializing stomp client on the web');
-    stompClient = StompClient(
-      config: StompConfig.SockJS(
-        url: 'https://shed-backend.herokuapp.com/shed',
-        onConnect: (frame) {
-          _onConnect(frame, channel);
-        },
-        onDisconnect: (frame) {
-          _onDisconnect(frame);
-        },
-        onStompError: (StompFrame error) {
-          print('stompError: $error');
-        },
-        onUnhandledMessage: (StompFrame error) {
-          print('unhandledError: $error');
-        },
-        beforeConnect: () async {
-          print('waiting to connect to $channel...');
-          await Future.delayed(const Duration(milliseconds: 200));
-          print('connecting...');
-        },
-        onWebSocketError: (dynamic error) => print('webSocketError: $error'),
+        stompConnectHeaders:
+            !kIsWeb ? {'Authorization': 'Bearer $jwtToken'} : null,
+        webSocketConnectHeaders:
+            !kIsWeb ? {'Authorization': 'Bearer $jwtToken'} : null,
       ),
     );
 

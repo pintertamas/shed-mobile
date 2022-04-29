@@ -36,6 +36,7 @@ class RouteGenerator {
           builder: (context) {
             return LobbyScreen(
               gameId: args!.gameId,
+              webSocketService: args.webSocketService,
             );
           },
         );
