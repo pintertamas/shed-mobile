@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
 import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
@@ -33,9 +34,25 @@ Future showJoinGamePopup({
                 ),
               ),
               CustomButton(
-                onPressed: () {
+                onPressed: () async {
+                  bool gameExists = true;
                   if (formKey.currentState!.validate()) {
                     // TODO: check if gameIdController.text.trim() is a valid game ID
+                    await gameService
+                        .isGameExist(gameIdController.text.trim())
+                        .then(
+                          (value) => {
+                            if (!value)
+                              {
+                                errorMessagePopup(
+                                  context,
+                                  'Game not found with this name\n${gameIdController.text.trim()}',
+                                ),
+                                gameExists = false,
+                              }
+                          },
+                        );
+                    if (!gameExists) return;
                     gameService
                         .saveGameName(
                           gameIdController.text.trim(),

@@ -153,4 +153,27 @@ class GameService {
       return [];
     }
   }
+
+  Future<bool> isGameExist(String gameName) async {
+    try {
+      final response = await dio.get(
+        '/game/',
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+        queryParameters: {
+          'gameName': gameName,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioError {
+      return false;
+    }
+  }
 }

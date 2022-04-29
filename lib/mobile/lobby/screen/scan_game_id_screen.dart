@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
+import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 
@@ -17,9 +19,11 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
   final qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   bool gameFoundAlready = false;
+  late GameService gameService;
 
   @override
   void initState() {
+    gameService = GameService();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -64,7 +68,7 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
           borderWidth: 30,
           borderLength: 50,
           borderRadius: 10,
-          borderColor: Colors.green, // TODO: Make a theme for the project!
+          borderColor: Colors.green,
         ),
       );
 
@@ -72,15 +76,44 @@ class _ScanGameIdScreenState extends State<ScanGameIdScreen> {
     setState(() => this.controller = controller);
 
     controller.scannedDataStream.listen(
-      (qrcode) {
+      (qrcode) async {
         if (gameFoundAlready) return;
         gameFoundAlready = true;
-        // TODO: check if qrcode.code is a valid game ID
-        Navigator.pushReplacementNamed(
-          context,
-          LobbyScreen.routeName,
-          arguments: LobbyScreenArguments(qrcode.code!),
+        bool gameExists = true;
+        print(
+          'checking existence of: ${qrcode.code}',
         );
+        if (qrcode.code == null) return;
+        gameService.saveGameName(qrcode.code!);
+        await gameService
+            .isGameExist(qrcode.code!)
+            .then(
+              (value) => {
+                print('gameExists: $value'),
+                if (!value)
+                  {
+                    errorMessagePopup(
+                      context,
+                      'Game not found with this name\n${qrcode.code}',
+                    ),
+                    gameExists = false,
+                  }
+              },
+            )
+            .then(
+              (value) => {
+                if (gameExists)
+                  {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      LobbyScreen.routeName,
+                      arguments: LobbyScreenArguments(
+                        qrcode.code!,
+                      ),
+                    ),
+                  },
+              },
+            );
       },
     );
   }

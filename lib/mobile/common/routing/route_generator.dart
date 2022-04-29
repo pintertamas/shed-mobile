@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
+import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
@@ -76,14 +78,17 @@ Route<dynamic> errorRoute() {
             ),
             CustomButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(
+                kIsWeb ? Navigator.pushReplacementNamed(
                   context,
                   CreateGameScreen.routeName,
+                ) : Navigator.pushReplacementNamed(
+                  context,
+                  LoadingScreen.routeName,
                 );
               },
               text: 'Go back to the home page',
               color: Colors.red,
-              width: MediaQuery.of(context).size.width / 5,
+              width: MediaQuery.of(context).size.width / 3,
             )
           ],
         ),

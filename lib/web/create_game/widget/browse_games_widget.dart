@@ -2,6 +2,7 @@ import 'package:animated_button/animated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
 import 'package:websocket_mobile/mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
@@ -167,9 +168,25 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                   width: widget.buttonWidth,
                                   height: widget.buttonHeight,
                                   color: Colors.green,
-                                  onPressed: () {
+                                  onPressed: () async {
                                     final String gameName =
                                         snapshot.data![index].name;
+                                    bool gameExists = true;
+                                    await gameService
+                                        .isGameExist(gameName)
+                                        .then(
+                                          (value) => {
+                                            if (!value)
+                                              {
+                                                errorMessagePopup(
+                                                  context,
+                                                  'Game not found with this name\n$gameName',
+                                                ),
+                                                gameExists = false,
+                                              }
+                                          },
+                                        );
+                                    if (!gameExists) return;
                                     gameService.saveGameName(gameName);
                                     print('joining $gameName...');
                                     initWebsocketClient(gameName).then(
