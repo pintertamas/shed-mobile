@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocket_mobile/mobile/game/model/player.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 import 'package:websocket_mobile/web/create_game/model/game.dart';
 
@@ -9,6 +10,7 @@ class GameService {
   GameService() {
     final options = BaseOptions(
       baseUrl: 'https://shed-backend.herokuapp.com',
+      contentType: 'application/json',
       connectTimeout: 5000,
       receiveTimeout: 3000,
     );
@@ -159,6 +161,7 @@ class GameService {
       final response = await dio.get(
         '/game/',
         options: Options(
+          responseType: ResponseType.plain,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -174,6 +177,65 @@ class GameService {
       return false;
     } on DioError {
       return false;
+    }
+  }
+
+  Future<String> isPlayerInExistingGame() async {
+    final String username = await UserService.getUsername();
+
+    try {
+      final response = await dio.get(
+        '/player/check-already-in-game/$username',
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      print(response.requestOptions.uri);
+
+      if (response.statusCode == 200) {
+        return response.data.toString();
+      }
+      return '';
+    } on DioError catch (e) {
+      print(e.message);
+      print('uri in catch: ${e.requestOptions.uri}');
+
+      return '';
+    }
+  }
+
+  Future<String> leaveGame() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? jwtToken = prefs.getString('jwtToken');
+    final String username = await UserService.getUsername();
+
+    try {
+      final response = await dio.delete(
+        '/player/disconnect/$username',
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $jwtToken',
+          },
+        ),
+      );
+
+      print(response.requestOptions.uri);
+
+      if (response.statusCode == 200) {
+        return response.data.toString();
+      }
+      return '';
+    } on DioError catch (e) {
+      print(e.message);
+      print('uri in catch: ${e.requestOptions.uri}');
+
+      return '';
     }
   }
 }

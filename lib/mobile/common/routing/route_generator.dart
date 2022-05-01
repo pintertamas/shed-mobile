@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
@@ -46,9 +48,12 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) {
-            return GameScreen(
-              webSocketService: args!.webSocketService,
-              gameId: args.gameId,
+            return ChangeNotifierProvider<GameProvider>(
+              create: (_) => GameProvider(),
+              child: GameScreen(
+                webSocketService: args!.webSocketService,
+                gameId: args.gameId,
+              ),
             );
           },
         );
@@ -79,13 +84,15 @@ Route<dynamic> errorRoute() {
             ),
             CustomButton(
               onPressed: () {
-                kIsWeb ? Navigator.pushReplacementNamed(
-                  context,
-                  CreateGameScreen.routeName,
-                ) : Navigator.pushReplacementNamed(
-                  context,
-                  LoadingScreen.routeName,
-                );
+                kIsWeb
+                    ? Navigator.pushReplacementNamed(
+                        context,
+                        CreateGameScreen.routeName,
+                      )
+                    : Navigator.pushReplacementNamed(
+                        context,
+                        LoadingScreen.routeName,
+                      );
               },
               text: 'Go back to the home page',
               color: Colors.red,

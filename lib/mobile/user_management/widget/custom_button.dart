@@ -39,6 +39,7 @@ class _CustomButtonState extends State<CustomButton> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
+          textAlign: TextAlign.center,
         ),
       ),
     );

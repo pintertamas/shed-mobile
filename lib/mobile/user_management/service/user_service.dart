@@ -117,7 +117,7 @@ class UserService {
     prefs.setString('username', username);
   }
 
-  Future<String> getUsername() async {
+  static Future<String> getUsername() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username') ?? 'unknown';
   }

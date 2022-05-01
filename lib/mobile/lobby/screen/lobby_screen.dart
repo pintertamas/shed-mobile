@@ -40,8 +40,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
         Navigator.of(context).pushReplacementNamed(
           GameScreen.routeName,
           arguments: GameScreenArguments(
-            webSocketService,
-            widget.gameId,
+            webSocketService: webSocketService,
+            gameId: widget.gameId,
           ),
         );
       }
@@ -63,15 +63,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
     gameService = GameService();
     listPlayers = gameService.loadConnectedUsers(connectedUsers);
     Future.delayed(Duration.zero, _checkGameStart);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    setState(() {});
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return StreamBuilder<bool>(
       stream: webSocketService.checkConnection(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
