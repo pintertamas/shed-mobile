@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:websocket_mobile/mobile/common/service/game_service.dart';
-import 'package:websocket_mobile/mobile/common/widget/card_widget.dart';
+import 'package:websocket_mobile/common/model/game_cards.dart';
+import 'package:websocket_mobile/common/service/card_service.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/common/widget/card_widget.dart';
 import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 import 'package:websocket_mobile/mobile/game/widget/cards_on_table_positioned_row.dart';
+import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
@@ -26,11 +29,15 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late GameService gameService;
+  late CardService cardService;
   static const padding = 20.0;
+  late Future<GameCards> getGameCards;
 
   @override
   void initState() {
     gameService = GameService();
+    cardService = CardService();
+    getGameCards = cardService.fetchGameCards();
     super.initState();
   }
 
@@ -61,92 +68,115 @@ class _GameScreenState extends State<GameScreen> {
               );
           return true;
         },
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.brown,
-            body: Center(
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: padding,
-                    left: padding,
-                    child: CustomButton(
-                      text: 'Play',
-                      width: width / 2 - height / 2 / 1.4 - padding * 7,
-                      color: Colors.green,
-                      enabled: true,
-                      onPressed: () {},
-                    ),
-                  ),
-                  Positioned(
-                    top: padding,
-                    right: padding,
-                    child: CustomButton(
-                      text: 'Leave',
-                      width: width / 2 - height / 2 / 1.4 - padding * 7,
-                      color: Colors.red,
-                      enabled: true,
-                      onPressed: () async {
-                        print('leaving game');
-                        gameService
-                            .leaveGame()
-                            .then((value) => widget.webSocketService.deactivate())
-                            .then(
-                              (value) => Navigator.pushReplacementNamed(
-                                context,
-                                LoadingScreen.routeName,
+        child: FutureBuilder<GameCards>(
+          future: getGameCards.then((value) => provider.setCards(value)),
+          builder: (context, snapshot) {
+            return StreamBuilder<WebSocketEvent>(
+                stream: widget.webSocketService.webSocketStream,
+                builder: (
+                    BuildContext context,
+                    AsyncSnapshot<WebSocketEvent> snapshot,
+                    ) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    if (snapshot.data!.type == 'played') {
+                      provider.playCards(widget.webSocketService);
+                    } else if (snapshot.data!.type == 'invalid') {
+                      provider.selectedCards.clear();
+                    }
+                  }
+                return SafeArea(
+                  child: Scaffold(
+                    backgroundColor: Colors.brown,
+                    body: Center(
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: padding,
+                            left: padding,
+                            child: CustomButton(
+                              text: 'Play',
+                              width: width / 2 - height / 2 / 1.4 - padding * 7,
+                              color: Colors.green,
+                              enabled: true,
+                              onPressed: () {
+                                provider.playCards(widget.webSocketService);
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            top: padding,
+                            right: padding,
+                            child: CustomButton(
+                              text: 'Leave',
+                              width: width / 2 - height / 2 / 1.4 - padding * 7,
+                              color: Colors.red,
+                              enabled: true,
+                              onPressed: () async {
+                                print('leaving game');
+                                gameService
+                                    .leaveGame()
+                                    .then((value) =>
+                                        widget.webSocketService.deactivate())
+                                    .then(
+                                      (value) => Navigator.pushReplacementNamed(
+                                        context,
+                                        LoadingScreen.routeName,
+                                      ),
+                                    );
+                              },
+                            ),
+                          ),
+                          CardsOnTablePositionedRow(
+                            top: 0,
+                            left: width / 2 - height / 2 / 1.4 - padding * 5,
+                            cards: provider.cardsDown,
+                            padding: padding,
+                            width: width,
+                            height: height,
+                            provider: provider,
+                            isVisible: false,
+                          ),
+                          CardsOnTablePositionedRow(
+                            top: padding,
+                            left: width / 2 - height / 2 / 1.4 - padding * 5,
+                            cards: provider.cardsUp,
+                            padding: padding,
+                            width: width,
+                            height: height,
+                            provider: provider,
+                            isVisible: true,
+                          ),
+                          if (provider.cardsInHand.isNotEmpty)
+                            Positioned(
+                              top: height / 2,
+                              left: 0,
+                              child: Container(
+                                width: width,
+                                height: height / 2 - padding,
+                                color: Colors.green,
+                                child: ListView.builder(
+                                  itemCount: provider.cardsInHand.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return CardWidget(
+                                      number: provider.cardsInHand[index].number,
+                                      shape: provider.cardsInHand[index].shape,
+                                      rule: provider.cardsInHand[index].rule,
+                                      size: height / 2,
+                                      isVisible: true,
+                                    );
+                                  },
+                                ),
                               ),
-                            );
-                      },
-                    ),
-                  ),
-                  CardsOnTablePositionedRow(
-                    top: 0,
-                    left: width / 2 - height / 2 / 1.4 - padding * 5,
-                    cards: provider.cardsDown,
-                    padding: padding,
-                    width: width,
-                    height: height,
-                    provider: provider,
-                    isVisible: false,
-                  ),
-                  CardsOnTablePositionedRow(
-                    top: padding,
-                    left: width / 2 - height / 2 / 1.4 - padding * 5,
-                    cards: provider.cardsUp,
-                    padding: padding,
-                    width: width,
-                    height: height,
-                    provider: provider,
-                    isVisible: true,
-                  ),
-                  if (provider.cardsInHand.isNotEmpty)
-                    Positioned(
-                      top: height / 2,
-                      left: 0,
-                      child: Container(
-                        width: width,
-                        height: height / 2 - padding,
-                        color: Colors.green,
-                        child: ListView.builder(
-                          itemCount: provider.cardsInHand.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (BuildContext context, int index) {
-                            return CardWidget(
-                              number: provider.cardsInHand[index].number,
-                              shape: provider.cardsInHand[index].shape,
-                              rule: provider.cardsInHand[index].rule,
-                              size: height / 2,
-                              isVisible: true,
-                            );
-                          },
-                        ),
+                            ),
+                        ],
                       ),
                     ),
-                ],
-              ),
-            ),
-          ),
+                  ),
+                );
+              }
+            );
+          },
         ),
       ),
     );

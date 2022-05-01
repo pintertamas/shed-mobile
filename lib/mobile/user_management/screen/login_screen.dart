@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
+import 'package:websocket_mobile/common/error_handling/error_message_popup.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_input_container.dart';

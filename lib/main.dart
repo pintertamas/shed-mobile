@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:websocket_mobile/mobile/common/routing/route_generator.dart';
+import 'package:websocket_mobile/common/routing/route_generator.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/scan_game_id_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/forgot_password_screen.dart';

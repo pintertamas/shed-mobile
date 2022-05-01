@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:websocket_mobile/mobile/common/model/card.dart';
-import 'package:websocket_mobile/mobile/common/model/rule.dart';
-import 'package:websocket_mobile/mobile/common/model/shape.dart';
+import 'package:provider/provider.dart';
+import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/rule.dart';
+import 'package:websocket_mobile/common/model/shape.dart';
+import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 
 class CardWidget extends StatefulWidget {
   const CardWidget({
@@ -27,14 +29,16 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<GameProvider>(context);
     final String shape = widget.shape.name.toLowerCase();
     final String cardName =
-        widget.isVisible ? '$shape${widget.number + 2}' : 'back';
+    widget.isVisible ? '$shape${widget.number}' : 'back';
 
     return GestureDetector(
       onTap: () {
-        top = 100;
-        print(Card(widget.number, widget.shape, widget.rule).toJson());
+        final Card card = Card(widget.number, widget.shape, widget.rule);
+        print(card.toJson());
+        provider.selectCard(card);
       },
       child: SizedBox(
         height: widget.size,

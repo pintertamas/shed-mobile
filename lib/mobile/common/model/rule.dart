@@ -1,7 +1,0 @@
-enum Rule {
-  NONE,
-  INVISIBLE,
-  JOLLY_JOKER,
-  BURNER,
-  REDUCER,
-}

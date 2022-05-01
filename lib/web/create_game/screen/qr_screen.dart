@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:websocket_mobile/mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';

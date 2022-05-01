@@ -1,7 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_switch/sliding_switch.dart';
-import 'package:websocket_mobile/mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/web/create_game/model/card_rule.dart';
 import 'package:websocket_mobile/web/create_game/model/create_game_provider.dart';

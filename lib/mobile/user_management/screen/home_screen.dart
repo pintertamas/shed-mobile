@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:websocket_mobile/mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/browse_games.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:websocket_mobile/mobile/common/model/card.dart';
-import 'package:websocket_mobile/mobile/common/widget/card_widget.dart';
+import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/widget/card_widget.dart';
 import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 
 class CardsOnTablePositionedRow extends StatelessWidget {

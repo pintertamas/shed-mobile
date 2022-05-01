@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
-import 'package:websocket_mobile/mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/common/error_handling/error_message_popup.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 

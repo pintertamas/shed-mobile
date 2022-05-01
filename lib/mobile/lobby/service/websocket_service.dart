@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/mobile/game/model/play_message.dart';
 import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
 
 class WebSocketService {
@@ -128,6 +130,19 @@ class WebSocketService {
       destination: '/app/start-game/$channel',
     );
     print('Start game signal sent to channel $channel...');
+  }
+
+  void sendAction(String channel, String username, List<Card> selectedCards) {
+    if (!stompClient.connected) return;
+
+    if (!kIsWeb) {
+      stompClient.send(
+        destination: '/app/throw-a-card/$channel/$username',
+        body: PlayMessage(username, selectedCards).toString(),
+      );
+    }
+    print(selectedCards.length);
+    print('Cards were played...');
   }
 
   void deactivate() {

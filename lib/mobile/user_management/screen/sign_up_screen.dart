@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
+import 'package:websocket_mobile/common/error_handling/error_message_popup.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_request_type.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';

@@ -19,16 +19,16 @@ Map<String, dynamic> _$CardToJson(Card instance) => <String, dynamic>{
     };
 
 const _$ShapeEnumMap = {
-  Shape.CLUBS: 'CLUBS',
-  Shape.DIAMONDS: 'DIAMONDS',
-  Shape.HEARTS: 'HEARTS',
-  Shape.SPADES: 'SPADES',
+  Shape.Clubs: 'Clubs',
+  Shape.Diamonds: 'Diamonds',
+  Shape.Hearts: 'Hearts',
+  Shape.Spades: 'Spades',
 };
 
 const _$RuleEnumMap = {
-  Rule.NONE: 'NONE',
-  Rule.INVISIBLE: 'INVISIBLE',
-  Rule.JOLLY_JOKER: 'JOLLY_JOKER',
-  Rule.BURNER: 'BURNER',
-  Rule.REDUCER: 'REDUCER',
+  Rule.None: 'None',
+  Rule.Invisible: 'Invisible',
+  Rule.Jolly_Joker: 'Jolly_Joker',
+  Rule.Burner: 'Burner',
+  Rule.Reducer: 'Reducer',
 };

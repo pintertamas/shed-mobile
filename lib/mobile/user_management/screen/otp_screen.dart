@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:websocket_mobile/mobile/common/error_handling/error_message_popup.dart';
+import 'package:websocket_mobile/common/error_handling/error_message_popup.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_request_type.dart';
 import 'package:websocket_mobile/mobile/user_management/service/otp_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';

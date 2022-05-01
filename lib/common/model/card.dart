@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:websocket_mobile/mobile/common/model/rule.dart';
-import 'package:websocket_mobile/mobile/common/model/shape.dart';
+import 'package:websocket_mobile/common/model/rule.dart';
+import 'package:websocket_mobile/common/model/shape.dart';
 
 part 'card.g.dart';
 
