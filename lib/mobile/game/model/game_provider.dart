@@ -36,10 +36,12 @@ class GameProvider extends ChangeNotifier {
     if (selectedCards.contains(newCard)) {
       selectedCards.remove(newCard);
     } else if (cardsInHand.isNotEmpty) {
-      if (selectedCards.isEmpty && newCard.state == CardState.Hand) {
+      if (newCard.state == CardState.Hand) {
+        if (selectedCards.isNotEmpty) {
+          selectedCards.clear();
+        }
         selectedCards.add(newCard);
-      }
-      if (newCard.state != CardState.Hand) {
+      } else if (newCard.state != CardState.Hand) {
         if (newCard.state == CardState.Invisible) {
           notifyListeners();
           return;
