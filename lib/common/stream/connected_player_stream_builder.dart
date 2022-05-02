@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
+import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 
 class ConnectedPlayerStreamBuilder extends StatefulWidget {
@@ -37,12 +37,12 @@ class _ConnectedPlayerStreamBuilderState
       ) {
         if (snapshot.hasData && snapshot.data != null) {
           if (snapshot.data!.type == 'join') {
-            final String connectedUser = snapshot.data!.message;
+            final String connectedUser = snapshot.data!.message!;
             if (!connectedUsers.contains(connectedUser)) {
               connectedUsers.add(connectedUser);
             }
           } else if (snapshot.data!.type == 'leave') {
-            final String leavingUser = snapshot.data!.message;
+            final String leavingUser = snapshot.data!.message!;
             if (connectedUsers.contains(leavingUser)) {
               connectedUsers.remove(leavingUser);
             }

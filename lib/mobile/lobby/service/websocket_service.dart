@@ -9,7 +9,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:websocket_mobile/common/model/card.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/game/model/play_message.dart';
-import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
+import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 class WebSocketService {
@@ -26,7 +26,12 @@ class WebSocketService {
         onConnect: (_) {
           _onConnect(_, channel);
           if (kIsWeb) return;
-          webSocketStream.add(WebSocketEvent('connect', username));
+          webSocketStream.add(
+            WebSocketEvent(
+              type: 'connect',
+              username: username,
+            ),
+          );
           joinGame(channel, username);
         },
         onDisconnect: (frame) {
@@ -78,7 +83,12 @@ class WebSocketService {
         final String type = result['type'].toString();
         final String message = result['message'].toString();
         print('type: $type');
-        webSocketStream.add(WebSocketEvent(type, message));
+        webSocketStream.add(
+          WebSocketEvent(
+            type: type,
+            message: message,
+          ),
+        );
       },
     );
     print('connected to ${stompClient.config.url}');
@@ -88,7 +98,7 @@ class WebSocketService {
     print('Disconnected');
   }
 
-  void sendMessage(channel, String message) {
+  /*void sendMessage(channel, String message) {
     if (!stompClient.connected) return;
     stompClient.send(
       destination: '/topic/$channel',
@@ -97,7 +107,7 @@ class WebSocketService {
       }), // TODO: It's going to be a JSON containing all the data
     );
     print('Sending message: $message');
-  }
+  }*/
 
   void joinGame(channel, username) {
     if (!stompClient.connected) return;

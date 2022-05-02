@@ -32,8 +32,15 @@ class GameProvider extends ChangeNotifier {
     return gameCards;
   }
 
+  bool containsCard(List<Card> cards, Card card) {
+    for (final Card _card in cards) {
+      if (_card.id == card.id) return true;
+    }
+    return false;
+  }
+
   void selectCard(Card newCard) {
-    if (selectedCards.contains(newCard)) {
+    if (containsCard(selectedCards, newCard)) {
       selectedCards.remove(newCard);
     } else if (cardsInHand.isNotEmpty) {
       if (newCard.state == CardState.Hand) {
@@ -82,6 +89,10 @@ class GameProvider extends ChangeNotifier {
       username,
       selectedCards,
     );
+    print('cards in hand after this: ');
+    for (final Card card in cardsInHand) {
+      print(card.toJson());
+    }
   }
 
   void deletePlayedCards() {

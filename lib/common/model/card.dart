@@ -19,6 +19,7 @@ class Card {
 
   Map<String, dynamic> toJson() => _$CardToJson(this);
 
+  @JsonKey(name: 'cardConfigId')
   int id;
   int number;
   Shape shape;

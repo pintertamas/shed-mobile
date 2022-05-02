@@ -48,13 +48,11 @@ class _CardWidgetState extends State<CardWidget> {
           widget.rule,
           widget.state,
         );
-        //print(card.toJson());
         provider.selectCard(card);
         print('selectedCards:');
         for (final Card card in provider.selectedCards) {
           print(card.toJson());
         }
-        //provider.deletePlayedCards();
       },
       child: SizedBox(
         height: widget.size,

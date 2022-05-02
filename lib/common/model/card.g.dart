@@ -7,7 +7,7 @@ part of 'card.dart';
 // **************************************************************************
 
 Card _$CardFromJson(Map<String, dynamic> json) => Card(
-      json['id'] as int,
+      json['cardConfigId'] as int,
       json['number'] as int,
       $enumDecode(_$ShapeEnumMap, json['shape']),
       $enumDecode(_$RuleEnumMap, json['rule']),
@@ -15,7 +15,7 @@ Card _$CardFromJson(Map<String, dynamic> json) => Card(
     );
 
 Map<String, dynamic> _$CardToJson(Card instance) => <String, dynamic>{
-      'id': instance.id,
+      'cardConfigId': instance.id,
       'number': instance.number,
       'shape': _$ShapeEnumMap[instance.shape],
       'rule': _$RuleEnumMap[instance.rule],

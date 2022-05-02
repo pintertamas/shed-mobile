@@ -7,9 +7,10 @@ import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/common/widget/card_widget.dart';
 import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 import 'package:websocket_mobile/mobile/game/widget/cards_on_table_positioned_row.dart';
-import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
+import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 
 class GameScreen extends StatefulWidget {
@@ -32,12 +33,19 @@ class _GameScreenState extends State<GameScreen> {
   late CardService cardService;
   static const padding = 20.0;
   late Future<GameCards> getGameCards;
+  late Future<void> getUsername;
+  late String username;
+
+  Future<void> setUsername() async {
+    username = await UserService.getUsername();
+  }
 
   @override
   void initState() {
     gameService = GameService();
     cardService = CardService();
     getGameCards = cardService.fetchGameCards();
+    getUsername = setUsername();
     super.initState();
   }
 
@@ -69,7 +77,11 @@ class _GameScreenState extends State<GameScreen> {
           return true;
         },
         child: FutureBuilder<GameCards>(
-          future: getGameCards.then((value) => provider.setCards(value)),
+          future: getUsername.then(
+            (value) => getGameCards.then(
+              (value) => provider.setCards(value),
+            ),
+          ),
           builder: (context, snapshot) {
             return StreamBuilder<WebSocketEvent>(
               stream: widget.webSocketService.webSocketStream,
@@ -78,10 +90,15 @@ class _GameScreenState extends State<GameScreen> {
                 AsyncSnapshot<WebSocketEvent> snapshot,
               ) {
                 if (snapshot.hasData && snapshot.data != null) {
-                  if (snapshot.data!.type == 'played') {
-                    provider.playCards(widget.webSocketService);
-                  } else if (snapshot.data!.type == 'invalid') {
+                  if (snapshot.data!.validity == 'valid') {
+                    provider.deletePlayedCards();
+                    print('drawn cards:');
+                    for (final card in snapshot.data!.cards!) {
+                      print(card.toJson());
+                    }
+                  } else if (snapshot.data!.validity == 'invalid') {
                     provider.selectedCards.clear();
+                    print('invalid message: ${snapshot.data!.message}');
                   }
                 }
                 return SafeArea(
