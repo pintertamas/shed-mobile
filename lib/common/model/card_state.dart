@@ -1,4 +1,4 @@
-enum State {
+enum CardState {
   Hand,
   Visible,
   Invisible,

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/home_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
@@ -43,8 +42,7 @@ class OtpService {
   }
 
   Future<bool> checkTokenValidity() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwtToken = prefs.getString('jwtToken');
+    final String jwtToken = await UserService.getJwtToken();
     print('jwtToken: $jwtToken');
 
     if (jwtToken == null || jwtToken == '') return false;

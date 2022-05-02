@@ -122,6 +122,11 @@ class UserService {
     return prefs.getString('username') ?? 'unknown';
   }
 
+  static Future<String> getJwtToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwtToken') ?? '';
+  }
+
   Future<void> logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwtToken', '');

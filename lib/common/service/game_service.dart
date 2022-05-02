@@ -112,8 +112,7 @@ class GameService {
   }
 
   Future<List<Player>> getListOfPlayers(List<String> connectedUsers) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwtToken = prefs.getString('jwtToken');
+    final String jwtToken = await UserService.getJwtToken();
     final String gameName = await getGameName();
     print('Connecting to $gameName');
 
@@ -209,8 +208,7 @@ class GameService {
   }
 
   Future<String> leaveGame() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwtToken = prefs.getString('jwtToken');
+    final String jwtToken = await UserService.getJwtToken();
     final String username = await UserService.getUsername();
 
     try {

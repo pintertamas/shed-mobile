@@ -94,62 +94,77 @@ class _LobbyScreenState extends State<LobbyScreen> {
             ),
           );
         } else {
-          return Scaffold(
-            backgroundColor: kIsWeb ? Colors.green : Colors.brown,
-            body: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          widget.gameId,
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+          return WillPopScope(
+            onWillPop: () async {
+              webSocketService.leaveGame().then(
+                    (value) => {
+                  webSocketService.deactivate(),
+                  print('Leaving lobby...'),
+                },
+              );
+              Navigator.pushReplacementNamed(
+                context,
+                HomeScreen.routeName,
+              );
+              return true;
+            },
+            child: Scaffold(
+              backgroundColor: kIsWeb ? Colors.green : Colors.brown,
+              body: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.gameId,
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                      FutureBuilder<void>(
-                        future: listPlayers,
-                        builder: (context, AsyncSnapshot<void> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done) {
-                            return SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.7,
-                              child: ConnectedPlayerStreamBuilder(
-                                webSocketService: webSocketService,
-                                connectedUsers: connectedUsers,
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                              child: Text('Loading...'),
-                            );
-                          }
-                        },
-                      ),
-                      if (!kIsWeb)
-                        CustomButton(
-                          onPressed: () {
-                            webSocketService.leaveGame().then(
-                                  (value) => {
-                                    webSocketService.deactivate(),
-                                    print('Leaving lobby...'),
-                                  },
-                                );
-                            Navigator.pushReplacementNamed(
-                              context,
-                              HomeScreen.routeName,
-                            );
+                        FutureBuilder<void>(
+                          future: listPlayers,
+                          builder: (context, AsyncSnapshot<void> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.7,
+                                child: ConnectedPlayerStreamBuilder(
+                                  webSocketService: webSocketService,
+                                  connectedUsers: connectedUsers,
+                                ),
+                              );
+                            } else {
+                              return const Center(
+                                child: Text('Loading...'),
+                              );
+                            }
                           },
-                          text: 'Leave lobby',
-                          color: Colors.red,
                         ),
-                    ],
+                        if (!kIsWeb)
+                          CustomButton(
+                            onPressed: () {
+                              webSocketService.leaveGame().then(
+                                    (value) => {
+                                      webSocketService.deactivate(),
+                                      print('Leaving lobby...'),
+                                    },
+                                  );
+                              Navigator.pushReplacementNamed(
+                                context,
+                                HomeScreen.routeName,
+                              );
+                            },
+                            text: 'Leave lobby',
+                            color: Colors.red,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),

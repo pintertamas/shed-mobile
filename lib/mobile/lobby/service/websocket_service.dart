@@ -3,22 +3,22 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/game/model/play_message.dart';
 import 'package:websocket_mobile/mobile/lobby/model/connection_model.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 class WebSocketService {
   late StompClient stompClient;
   final webSocketStream = BehaviorSubject<WebSocketEvent>();
 
   Future<void> initStompClient(String channel) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String jwtToken = prefs.getString('jwtToken') ?? '';
-    final String username = prefs.getString('username') ?? '';
+    final String jwtToken = await UserService.getJwtToken();
+    final String username = await UserService.getUsername();
 
     stompClient = StompClient(
       config: StompConfig.SockJS(
@@ -30,7 +30,6 @@ class WebSocketService {
           joinGame(channel, username);
         },
         onDisconnect: (frame) {
-          //leaveGame(channel, username); // here we are already disconnected
           _onDisconnect(frame);
         },
         onStompError: (StompFrame error) {
@@ -114,9 +113,8 @@ class WebSocketService {
   Future<void> leaveGame() async {
     if (!stompClient.connected) return;
 
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String username = prefs.getString('username')!;
-    final String gameName = prefs.getString('gameName')!;
+    final String username = await UserService.getUsername();
+    final String gameName = await GameService.getGameName();
 
     stompClient.send(
       destination: '/app/leave-game/$gameName/$username',

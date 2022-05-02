@@ -72,18 +72,18 @@ class _GameScreenState extends State<GameScreen> {
           future: getGameCards.then((value) => provider.setCards(value)),
           builder: (context, snapshot) {
             return StreamBuilder<WebSocketEvent>(
-                stream: widget.webSocketService.webSocketStream,
-                builder: (
-                    BuildContext context,
-                    AsyncSnapshot<WebSocketEvent> snapshot,
-                    ) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    if (snapshot.data!.type == 'played') {
-                      provider.playCards(widget.webSocketService);
-                    } else if (snapshot.data!.type == 'invalid') {
-                      provider.selectedCards.clear();
-                    }
+              stream: widget.webSocketService.webSocketStream,
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<WebSocketEvent> snapshot,
+              ) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  if (snapshot.data!.type == 'played') {
+                    provider.playCards(widget.webSocketService);
+                  } else if (snapshot.data!.type == 'invalid') {
+                    provider.selectedCards.clear();
                   }
+                }
                 return SafeArea(
                   child: Scaffold(
                     backgroundColor: Colors.brown,
@@ -100,6 +100,7 @@ class _GameScreenState extends State<GameScreen> {
                               enabled: true,
                               onPressed: () {
                                 provider.playCards(widget.webSocketService);
+                                setState(() {});
                               },
                             ),
                           ),
@@ -115,8 +116,10 @@ class _GameScreenState extends State<GameScreen> {
                                 print('leaving game');
                                 gameService
                                     .leaveGame()
-                                    .then((value) =>
-                                        widget.webSocketService.deactivate())
+                                    .then(
+                                      (value) =>
+                                          widget.webSocketService.deactivate(),
+                                    )
                                     .then(
                                       (value) => Navigator.pushReplacementNamed(
                                         context,
@@ -133,20 +136,21 @@ class _GameScreenState extends State<GameScreen> {
                             padding: padding,
                             width: width,
                             height: height,
-                            provider: provider,
                             isVisible: false,
                           ),
                           CardsOnTablePositionedRow(
                             top: padding,
                             left: width / 2 - height / 2 / 1.4 - padding * 5,
-                            cards: provider.cardsUp,
+                            cards: context.read<GameProvider>().cardsUp,
                             padding: padding,
                             width: width,
                             height: height,
-                            provider: provider,
                             isVisible: true,
                           ),
-                          if (provider.cardsInHand.isNotEmpty)
+                          if (context
+                              .read<GameProvider>()
+                              .cardsInHand
+                              .isNotEmpty)
                             Positioned(
                               top: height / 2,
                               left: 0,
@@ -155,13 +159,34 @@ class _GameScreenState extends State<GameScreen> {
                                 height: height / 2 - padding,
                                 color: Colors.green,
                                 child: ListView.builder(
-                                  itemCount: provider.cardsInHand.length,
+                                  itemCount: context
+                                      .read<GameProvider>()
+                                      .cardsInHand
+                                      .length,
                                   scrollDirection: Axis.horizontal,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return CardWidget(
-                                      number: provider.cardsInHand[index].number,
-                                      shape: provider.cardsInHand[index].shape,
-                                      rule: provider.cardsInHand[index].rule,
+                                      id: context
+                                          .read<GameProvider>()
+                                          .cardsInHand[index]
+                                          .id,
+                                      number: context
+                                          .read<GameProvider>()
+                                          .cardsInHand[index]
+                                          .number,
+                                      shape: context
+                                          .read<GameProvider>()
+                                          .cardsInHand[index]
+                                          .shape,
+                                      rule: context
+                                          .read<GameProvider>()
+                                          .cardsInHand[index]
+                                          .rule,
+                                      state: context
+                                          .read<GameProvider>()
+                                          .cardsInHand[index]
+                                          .state,
                                       size: height / 2,
                                       isVisible: true,
                                     );
@@ -174,7 +199,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 );
-              }
+              },
             );
           },
         ),

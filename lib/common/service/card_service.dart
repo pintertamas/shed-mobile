@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:websocket_mobile/common/model/card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
+import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 class CardService {
   CardService() {
@@ -21,16 +21,15 @@ class CardService {
 
   Future<GameCards> fetchGameCards() async {
     final GameCards gameCards = GameCards([], [], []);
-    gameCards.cardsInHand = await fetchPlayerCards(State.Hand);
-    gameCards.cardsUp = await fetchPlayerCards(State.Visible);
-    gameCards.cardsDown = await fetchPlayerCards(State.Invisible);
+    gameCards.cardsInHand = await fetchPlayerCards(CardState.Hand);
+    gameCards.cardsUp = await fetchPlayerCards(CardState.Visible);
+    gameCards.cardsDown = await fetchPlayerCards(CardState.Invisible);
     return gameCards;
   }
 
-  Future<List<Card>> fetchPlayerCards(State state) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? jwtToken = prefs.getString('jwtToken');
-    final String username = prefs.getString('username') ?? 'unknown';
+  Future<List<Card>> fetchPlayerCards(CardState state) async {
+    final String jwtToken = await UserService.getJwtToken();
+    final String username = await UserService.getUsername();
 
     try {
       final response = await dio.get(
@@ -46,9 +45,13 @@ class CardService {
       print(response.requestOptions.uri);
 
       if (response.statusCode == 200) {
-        return (jsonDecode(response.data.toString()) as List)
+        final List<Card> cards = (jsonDecode(response.data.toString()) as List)
             .map((card) => Card.fromJson(card as Map<String, dynamic>))
             .toList();
+        for (final Card card in cards) {
+          card.state = state;
+        }
+        return cards;
       }
       return [];
     } on DioError catch (e) {

@@ -279,7 +279,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                   final List<CardRule> cardRules = [];
                   for (int i = 0; i < provider.rules.length; i++) {
                     cardRules.add(
-                      CardRule(i + 1, provider.rules[i]),
+                      CardRule(i + 2, provider.rules[i]),
                     );
                   }
                   gameService
@@ -304,6 +304,7 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                           else
                             {
                               enabled = true,
+                              // TODO: setState?
                             }
                         },
                       );
