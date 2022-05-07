@@ -37,13 +37,15 @@ class _LobbyScreenState extends State<LobbyScreen> {
     webSocketService.webSocketStream.listen((snapshot) {
       if (snapshot.type == 'game-start') {
         print('received game-start signal');
-        Navigator.of(context).pushReplacementNamed(
-          GameScreen.routeName,
-          arguments: GameScreenArguments(
-            webSocketService: webSocketService,
-            gameId: widget.gameId,
-          ),
-        );
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed(
+            GameScreen.routeName,
+            arguments: GameScreenArguments(
+              webSocketService: webSocketService,
+              gameId: widget.gameId,
+            ),
+          );
+        }
       }
     });
   }
@@ -96,16 +98,18 @@ class _LobbyScreenState extends State<LobbyScreen> {
         } else {
           return WillPopScope(
             onWillPop: () async {
-              webSocketService.leaveGame().then(
-                    (value) => {
-                  webSocketService.deactivate(),
-                  print('Leaving lobby...'),
-                },
-              );
-              Navigator.pushReplacementNamed(
-                context,
-                HomeScreen.routeName,
-              );
+              if (!kIsWeb) {
+                webSocketService.leaveGame().then(
+                      (value) => {
+                        webSocketService.deactivate(),
+                        print('Leaving lobby...'),
+                      },
+                    );
+                Navigator.pushReplacementNamed(
+                  context,
+                  HomeScreen.routeName,
+                );
+              }
               return true;
             },
             child: Scaffold(
@@ -133,7 +137,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                             if (snapshot.connectionState ==
                                 ConnectionState.done) {
                               return SizedBox(
-                                height: MediaQuery.of(context).size.height * 0.7,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.7,
                                 child: ConnectedPlayerStreamBuilder(
                                   webSocketService: webSocketService,
                                   connectedUsers: connectedUsers,

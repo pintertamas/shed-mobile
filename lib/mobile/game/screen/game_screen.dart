@@ -60,6 +60,9 @@ class _GameScreenState extends State<GameScreen> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
+    if (!mounted) return const Center();
+    setState(() {});
+
     return Visibility(
       visible: MediaQuery.of(context).orientation != Orientation.portrait,
       child: WillPopScope(
@@ -90,13 +93,13 @@ class _GameScreenState extends State<GameScreen> {
                 AsyncSnapshot<WebSocketEvent> snapshot,
               ) {
                 if (snapshot.hasData && snapshot.data != null) {
-                  if (snapshot.data!.validity == 'valid') {
+                  if (snapshot.data!.type == 'valid') {
                     provider.deletePlayedCards();
                     print('drawn cards:');
                     for (final card in snapshot.data!.cards!) {
                       print(card.toJson());
                     }
-                  } else if (snapshot.data!.validity == 'invalid') {
+                  } else if (snapshot.data!.type == 'invalid') {
                     provider.selectedCards.clear();
                     print('invalid message: ${snapshot.data!.message}');
                   }

@@ -107,7 +107,7 @@ class UserService {
         return false;
       }
     } on DioError catch (e) {
-      print('error: ${e.response!.statusCode ?? 'Error'}');
+      print('error: ${e.response?.statusCode ?? 'Error'}');
       return false;
     }
   }

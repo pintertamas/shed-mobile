@@ -41,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final double _settingsIconGap = MediaQuery.of(context).size.height * 0.015;
+
+    if (!mounted) return const Center();
+
     return FutureBuilder<String>(
         future: isPlayerInExistingGame,
         builder: (context, AsyncSnapshot<String> snapshot) {
