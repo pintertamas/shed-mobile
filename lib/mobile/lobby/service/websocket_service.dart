@@ -8,7 +8,7 @@ import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:websocket_mobile/common/model/card.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
-import 'package:websocket_mobile/mobile/game/model/play_message.dart';
+import 'package:websocket_mobile/mobile/game/model/action_request.dart';
 import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
@@ -80,15 +80,35 @@ class WebSocketService {
       callback: (StompFrame frame) {
         print('receiving message...');
         final dynamic result = json.decode(frame.body!);
+        final String uuid = result['uuid'].toString();
         final String type = result['type'].toString();
         final String message = result['message'].toString();
-        print('type: $type');
-        webSocketStream.add(
-          WebSocketEvent(
-            type: type,
-            message: message,
-          ),
-        );
+
+        if (['connect', 'join', 'leave', 'game-start'].contains(type)) {
+          print('type: $type');
+          webSocketStream.add(
+            WebSocketEvent(
+              uuid: uuid,
+              type: type,
+              message: message,
+            ),
+          );
+        } else if (['valid', 'invalid'].contains(type)) {
+          print('getting username...');
+          print('message');
+          final String username = result['username'].toString();
+
+          print('type: $type');
+          webSocketStream.add(
+            WebSocketEvent(
+              uuid: uuid,
+              type: type,
+              message: message,
+              username: username,
+              cards: [], // TODO
+            ),
+          );
+        }
       },
     );
     print('connected to ${stompClient.config.url}');
@@ -97,17 +117,6 @@ class WebSocketService {
   void _onDisconnect(StompFrame frame) {
     print('Disconnected');
   }
-
-  /*void sendMessage(channel, String message) {
-    if (!stompClient.connected) return;
-    stompClient.send(
-      destination: '/topic/$channel',
-      body: json.encode({
-        'message': message
-      }), // TODO: It's going to be a JSON containing all the data
-    );
-    print('Sending message: $message');
-  }*/
 
   void joinGame(channel, username) {
     if (!stompClient.connected) return;
@@ -144,9 +153,10 @@ class WebSocketService {
     if (!stompClient.connected) return;
 
     if (!kIsWeb) {
+      print('sending played cards');
       stompClient.send(
         destination: '/app/throw-a-card/$channel/$username',
-        body: PlayMessage(username, selectedCards).toString(),
+        body: jsonEncode(ActionRequest(username, selectedCards).toJson()),
       );
     }
     print(selectedCards.length);

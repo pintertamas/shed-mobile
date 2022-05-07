@@ -72,9 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
               },
             )
-            .timeout(
-              const Duration(seconds: 5),
-              onTimeout: () => {
+            .whenComplete(
+              () => {
                 setState(
                   () {
                     enabled = true;

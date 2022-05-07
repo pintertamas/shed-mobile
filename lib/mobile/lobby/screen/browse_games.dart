@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:websocket_mobile/web/create_game/widget/browse_games_widget.dart';
 
@@ -14,14 +11,6 @@ class BrowseGamesScreen extends StatefulWidget {
 }
 
 class _BrowseGamesScreenState extends State<BrowseGamesScreen> {
-  Stream<double> getRandomValues() async* {
-    final random = Random(2);
-    while (true) {
-      await Future.delayed(const Duration(seconds: 1));
-      yield random.nextDouble();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

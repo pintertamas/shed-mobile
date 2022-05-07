@@ -89,10 +89,6 @@ class GameProvider extends ChangeNotifier {
       username,
       selectedCards,
     );
-    print('cards in hand after this: ');
-    for (final Card card in cardsInHand) {
-      print(card.toJson());
-    }
   }
 
   void deletePlayedCards() {
@@ -102,21 +98,18 @@ class GameProvider extends ChangeNotifier {
       removeCardFromTableDown(card);
     }
     selectedCards.clear();
-    notifyListeners();
+    //notifyListeners();
   }
 
   void removeCardFromHand(Card card) {
     _cardsInHand.remove(card);
-    notifyListeners();
   }
 
   void removeCardFromTableDown(Card card) {
     _cardsDown.remove(card);
-    notifyListeners();
   }
 
   void removeCardFromTableUp(Card card) {
     _cardsUp.remove(card);
-    notifyListeners();
   }
 }

@@ -307,6 +307,15 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                               // TODO: setState?
                             }
                         },
+                      )
+                      .whenComplete(
+                        () => {
+                          setState(
+                            () {
+                              enabled = true;
+                            },
+                          ),
+                        },
                       );
                 },
                 width: MediaQuery.of(context).size.width * 0.5,
