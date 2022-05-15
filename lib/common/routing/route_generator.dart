@@ -6,6 +6,7 @@ import 'package:websocket_mobile/mobile/game/model/game_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/game/screen/game_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
+import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/model/otp_screen_arguments.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';
@@ -83,7 +84,8 @@ class RouteGenerator {
           settings: settings,
           builder: (context) {
             return GameScreenWeb(
-                webSocketService: args!.webSocketService,
+              webSocketService: args?.webSocketService ??
+                  WebSocketService(), // TODO its for testing purposes only
             );
           },
         );

@@ -1,4 +1,4 @@
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'action_request.g.dart';
@@ -12,5 +12,5 @@ class ActionRequest {
   Map<String, dynamic> toJson() => _$ActionRequestToJson(this);
 
   String username;
-  List<Card> cards;
+  List<PlayingCard> cards;
 }

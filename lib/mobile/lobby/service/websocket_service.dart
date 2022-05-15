@@ -6,7 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/game/model/action_request.dart';
 import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
@@ -149,7 +149,7 @@ class WebSocketService {
     print('Start game signal sent to channel $channel...');
   }
 
-  void sendAction(String channel, String username, List<Card> selectedCards) {
+  void sendAction(String channel, String username, List<PlayingCard> selectedCards) {
     if (!stompClient.connected) return;
 
     if (!kIsWeb) {

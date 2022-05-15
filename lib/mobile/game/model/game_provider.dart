@@ -1,26 +1,25 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
-class GameProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  final List<Card> _cardsInHand = [];
-  final List<Card> _cardsUp = [];
-  final List<Card> _cardsDown = [];
+class GameProvider with ChangeNotifier {
+  final List<PlayingCard> _cardsInHand = [];
+  final List<PlayingCard> _cardsUp = [];
+  final List<PlayingCard> _cardsDown = [];
 
-  final List<Card> _selectedCards = [];
+  final List<PlayingCard> _selectedCards = [];
 
-  List<Card> get cardsInHand => _cardsInHand;
+  List<PlayingCard> get cardsInHand => _cardsInHand;
 
-  List<Card> get cardsUp => _cardsUp;
+  List<PlayingCard> get cardsUp => _cardsUp;
 
-  List<Card> get cardsDown => _cardsDown;
+  List<PlayingCard> get cardsDown => _cardsDown;
 
-  List<Card> get selectedCards => _selectedCards;
+  List<PlayingCard> get selectedCards => _selectedCards;
 
   GameCards setCards(GameCards gameCards) {
     _cardsInHand.clear();
@@ -33,14 +32,14 @@ class GameProvider with ChangeNotifier, DiagnosticableTreeMixin {
     return gameCards;
   }
 
-  bool containsCard(List<Card> cards, Card card) {
-    for (final Card _card in cards) {
+  bool containsCard(List<PlayingCard> cards, PlayingCard card) {
+    for (final PlayingCard _card in cards) {
       if (_card.id == card.id) return true;
     }
     return false;
   }
 
-  void selectCard(Card newCard) {
+  void selectCard(PlayingCard newCard) {
     if (containsCard(selectedCards, newCard)) {
       selectedCards.remove(newCard);
     } else if (cardsInHand.isNotEmpty) {
@@ -54,7 +53,7 @@ class GameProvider with ChangeNotifier, DiagnosticableTreeMixin {
           notifyListeners();
           return;
         }
-        for (final Card card in cardsInHand) {
+        for (final PlayingCard card in cardsInHand) {
           if (!selectedCards.contains(card)) {
             notifyListeners();
             return;
@@ -102,15 +101,15 @@ class GameProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  void removeCardFromHand(Card card) {
+  void removeCardFromHand(PlayingCard card) {
     _cardsInHand.remove(card);
   }
 
-  void removeCardFromTableDown(Card card) {
+  void removeCardFromTableDown(PlayingCard card) {
     _cardsDown.remove(card);
   }
 
-  void removeCardFromTableUp(Card card) {
+  void removeCardFromTableUp(PlayingCard card) {
     _cardsUp.remove(card);
   }
 }

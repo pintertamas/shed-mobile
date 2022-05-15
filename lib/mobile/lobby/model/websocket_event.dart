@@ -1,4 +1,4 @@
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'websocket_event.g.dart';
@@ -21,5 +21,5 @@ class WebSocketEvent {
   final String type;
   final String? username;
   final String? message;
-  final List<Card>? cards;
+  final List<PlayingCard>? cards;
 }

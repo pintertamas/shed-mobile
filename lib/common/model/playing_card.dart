@@ -3,11 +3,11 @@ import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/rule.dart';
 import 'package:websocket_mobile/common/model/shape.dart';
 
-part 'card.g.dart';
+part 'playing_card.g.dart';
 
 @JsonSerializable()
-class Card {
-  Card(
+class PlayingCard {
+  PlayingCard(
     this.id,
     this.number,
     this.shape,
@@ -15,9 +15,9 @@ class Card {
     this.state,
   );
 
-  factory Card.fromJson(Map<String, dynamic> json) => _$CardFromJson(json);
+  factory PlayingCard.fromJson(Map<String, dynamic> json) => _$PlayingCardFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CardToJson(this);
+  Map<String, dynamic> toJson() => _$PlayingCardToJson(this);
 
   @JsonKey(name: 'cardConfigId')
   int id;

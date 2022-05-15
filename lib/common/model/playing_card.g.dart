@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'card.dart';
+part of 'playing_card.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Card _$CardFromJson(Map<String, dynamic> json) => Card(
+PlayingCard _$PlayingCardFromJson(Map<String, dynamic> json) => PlayingCard(
       json['cardConfigId'] as int,
       json['number'] as int,
       $enumDecode(_$ShapeEnumMap, json['shape']),
@@ -14,7 +14,8 @@ Card _$CardFromJson(Map<String, dynamic> json) => Card(
       $enumDecode(_$CardStateEnumMap, json['state']),
     );
 
-Map<String, dynamic> _$CardToJson(Card instance) => <String, dynamic>{
+Map<String, dynamic> _$PlayingCardToJson(PlayingCard instance) =>
+    <String, dynamic>{
       'cardConfigId': instance.id,
       'number': instance.number,
       'shape': _$ShapeEnumMap[instance.shape],

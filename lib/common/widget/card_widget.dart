@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/rule.dart';
 import 'package:websocket_mobile/common/model/shape.dart';
+import 'package:websocket_mobile/common/widget/custom_playing_card.dart';
 import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 
 class CardWidget extends StatefulWidget {
@@ -15,6 +15,7 @@ class CardWidget extends StatefulWidget {
     required this.state,
     required this.size,
     required this.isVisible,
+    required this.provider,
     Key? key,
   }) : super(key: key);
   final int id;
@@ -24,6 +25,7 @@ class CardWidget extends StatefulWidget {
   final CardState state;
   final double size;
   final bool isVisible;
+  final GameProvider provider;
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -34,14 +36,15 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<GameProvider>(context);
+    //final provider = Provider.of<GameProvider>(context);
+    final provider = widget.provider;
     final String shape = widget.shape.name.toLowerCase();
     final String cardName =
         widget.isVisible ? '$shape${widget.number}' : 'back';
 
     return GestureDetector(
       onTap: () {
-        final Card card = Card(
+        final PlayingCard card = PlayingCard(
           widget.id,
           widget.number,
           widget.shape,
@@ -50,18 +53,13 @@ class _CardWidgetState extends State<CardWidget> {
         );
         provider.selectCard(card);
         print('selectedCards:');
-        for (final Card card in provider.selectedCards) {
+        for (final PlayingCard card in provider.selectedCards) {
           print(card.toJson());
         }
       },
-      child: SizedBox(
-        height: widget.size,
-        width: widget.size / 1.4,
-        //color: Colors.red,
-        child: Image.asset(
-          'assets/cards/$cardName.png',
-          fit: BoxFit.fitWidth,
-        ),
+      child: CustomPlayingCard(
+        cardName: cardName,
+        size: widget.size,
       ),
     );
   }

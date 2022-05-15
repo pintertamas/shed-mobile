@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
@@ -27,13 +27,16 @@ class CardService {
     return gameCards;
   }
 
-  Future<List<Card>> fetchPlayerCards(CardState state) async {
+  Future<List<PlayingCard>> fetchPlayerCards(
+    CardState state, {
+    String? username,
+  }) async {
     final String jwtToken = await UserService.getJwtToken();
-    final String username = await UserService.getUsername();
+    final String _username = username ?? await UserService.getUsername();
 
     try {
       final response = await dio.get(
-        '/cards/player/$username/${state.name}',
+        '/cards/player/$_username/${state.name}',
         options: Options(
           responseType: ResponseType.plain,
           headers: {
@@ -45,10 +48,10 @@ class CardService {
       print(response.requestOptions.uri);
 
       if (response.statusCode == 200) {
-        final List<Card> cards = (jsonDecode(response.data.toString()) as List)
-            .map((card) => Card.fromJson(card as Map<String, dynamic>))
+        final List<PlayingCard> cards = (jsonDecode(response.data.toString()) as List)
+            .map((card) => PlayingCard.fromJson(card as Map<String, dynamic>))
             .toList();
-        for (final Card card in cards) {
+        for (final PlayingCard card in cards) {
           card.state = state;
         }
         return cards;

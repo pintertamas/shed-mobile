@@ -158,11 +158,6 @@ class _GameScreenState extends State<GameScreen> {
                                 enabled: true,
                                 onPressed: () {
                                   provider.playCards(widget.webSocketService);
-                                  WidgetsBinding.instance?.addPostFrameCallback(
-                                    (_) => {
-                                      setState(() {}),
-                                    },
-                                  );
                                 },
                               ),
                             ),
@@ -194,6 +189,7 @@ class _GameScreenState extends State<GameScreen> {
                               ),
                             ),
                             CardsOnTablePositionedRow(
+                              provider: provider,
                               top: 0,
                               left: width / 2 - height / 2 / 1.4 - padding * 5,
                               cards: context.watch<GameProvider>().cardsDown,
@@ -203,6 +199,7 @@ class _GameScreenState extends State<GameScreen> {
                               isVisible: false,
                             ),
                             CardsOnTablePositionedRow(
+                              provider: provider,
                               top: padding,
                               left: width / 2 - height / 2 / 1.4 - padding * 5,
                               cards: context.watch<GameProvider>().cardsUp,
@@ -231,6 +228,7 @@ class _GameScreenState extends State<GameScreen> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return CardWidget(
+                                        provider: provider,
                                         id: context
                                             .watch<GameProvider>()
                                             .cardsInHand[index]

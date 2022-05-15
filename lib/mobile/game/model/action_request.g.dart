@@ -10,7 +10,7 @@ ActionRequest _$ActionRequestFromJson(Map<String, dynamic> json) =>
     ActionRequest(
       json['username'] as String,
       (json['cards'] as List<dynamic>)
-          .map((e) => Card.fromJson(e as Map<String, dynamic>))
+          .map((e) => PlayingCard.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

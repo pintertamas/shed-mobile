@@ -1,9 +1,9 @@
-import 'package:websocket_mobile/common/model/card.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 
 class GameCards {
   GameCards(this.cardsInHand, this.cardsUp, this.cardsDown);
 
-  List<Card> cardsInHand = [];
-  List<Card> cardsUp = [];
-  List<Card> cardsDown = [];
+  List<PlayingCard> cardsInHand = [];
+  List<PlayingCard> cardsUp = [];
+  List<PlayingCard> cardsDown = [];
 }
