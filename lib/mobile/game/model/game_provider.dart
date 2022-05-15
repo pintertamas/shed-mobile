@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:websocket_mobile/common/model/card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
@@ -6,7 +7,7 @@ import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
-class GameProvider extends ChangeNotifier {
+class GameProvider with ChangeNotifier, DiagnosticableTreeMixin {
   final List<Card> _cardsInHand = [];
   final List<Card> _cardsUp = [];
   final List<Card> _cardsDown = [];
@@ -98,7 +99,7 @@ class GameProvider extends ChangeNotifier {
       removeCardFromTableDown(card);
     }
     selectedCards.clear();
-    //notifyListeners();
+    notifyListeners();
   }
 
   void removeCardFromHand(Card card) {

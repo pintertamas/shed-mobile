@@ -10,7 +10,11 @@ import 'package:websocket_mobile/mobile/user_management/model/otp_screen_argumen
 import 'package:websocket_mobile/mobile/user_management/screen/loading_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/screen/otp_screen.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
+import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
+import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
+import 'package:websocket_mobile/web/game/model/game_screen_arguments_web.dart';
+import 'package:websocket_mobile/web/game/screen/game_screen_web.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -54,6 +58,32 @@ class RouteGenerator {
                 webSocketService: args!.webSocketService,
                 gameId: args.gameId,
               ),
+            );
+          },
+        );
+      case QRScreen.routeName:
+        final args = settings.arguments as QRScreenArguments?;
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            return ChangeNotifierProvider<GameProvider>(
+              create: (_) => GameProvider(),
+              child: QRScreen(
+                gameName: args!.gameName,
+                webSocketService: args.webSocketService,
+              ),
+            );
+          },
+        );
+      case GameScreenWeb.routeName:
+        final args = settings.arguments as GameScreenArgumentsWeb?;
+
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            return GameScreenWeb(
+                webSocketService: args!.webSocketService,
             );
           },
         );

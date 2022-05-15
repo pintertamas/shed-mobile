@@ -5,6 +5,7 @@ import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/user_management/widget/custom_button.dart';
 import 'package:websocket_mobile/web/create_game/model/card_rule.dart';
 import 'package:websocket_mobile/web/create_game/model/create_game_provider.dart';
+import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 import 'package:websocket_mobile/web/create_game/widget/rule_selection_widget.dart';
 
@@ -299,6 +300,9 @@ class _GameConfigWidgetState extends State<GameConfigWidget> {
                               Navigator.pushReplacementNamed(
                                 context,
                                 QRScreen.routeName,
+                                arguments: QRScreenArguments(
+                                  gameName: gameName,
+                                ),
                               ),
                             }
                           else

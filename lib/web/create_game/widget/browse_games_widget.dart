@@ -8,6 +8,7 @@ import 'package:websocket_mobile/mobile/lobby/model/lobby_screen_arguments.dart'
 import 'package:websocket_mobile/mobile/lobby/screen/lobby_screen.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/game.dart';
+import 'package:websocket_mobile/web/create_game/model/qr_screen_arguments.dart';
 import 'package:websocket_mobile/web/create_game/screen/qr_screen.dart';
 
 class BrowseGamesWidget extends StatefulWidget {
@@ -52,6 +53,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
 
   @override
   void initState() {
+    if (!mounted) return;
     initTime = DateTime.now();
     gameService = GameService();
     webSocketService = WebSocketService();
@@ -185,10 +187,16 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                               Navigator.pushNamed(
                                                 context,
                                                 QRScreen.routeName,
+                                                arguments: QRScreenArguments(
+                                                  gameName: gameName,
+                                                  webSocketService:
+                                                      webSocketService,
+                                                ),
                                               )
                                             else
                                               {
-                                                print('going to lobby screen with ${webSocketService.hashCode}'),
+                                                print(
+                                                    'going to lobby screen with ${webSocketService.hashCode}'),
                                                 Navigator.pushReplacementNamed(
                                                   context,
                                                   LobbyScreen.routeName,

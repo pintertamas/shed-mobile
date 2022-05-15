@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +45,7 @@ class _GameScreenState extends State<GameScreen> {
     username = await UserService.getUsername();
   }
 
-  /*Future<GameCards> loadData(provider) async {
+  Future<GameCards> loadData(GameProvider provider) async {
     await UserService.getUsername();
     final GameCards gameCards = await getGameCards;
     if (mounted) {
@@ -51,7 +53,7 @@ class _GameScreenState extends State<GameScreen> {
     } else {
       return GameCards([], [], []);
     }
-  }*/
+  }
 
   @override
   void initState() {
@@ -93,11 +95,7 @@ class _GameScreenState extends State<GameScreen> {
           return true;
         },
         child: FutureBuilder<GameCards>(
-          future: getUsername.then(
-            (value) => getGameCards.then(
-              (value) => provider.setCards(value),
-            ),
-          ),
+          future: loadData(provider),
           builder: (context, futureSnapshot) {
             if (futureSnapshot.hasData) {
               return StreamBuilder<WebSocketEvent>(
@@ -115,10 +113,16 @@ class _GameScreenState extends State<GameScreen> {
                           for (final card in snapshot.data!.cards!) {
                             print(card.toJson());
                           }
-                          provider.deletePlayedCards();
-                          getGameCards.then(
-                            (value) => {
-                              provider.setCards(value),
+                          WidgetsBinding.instance?.addPostFrameCallback(
+                            (_) => {
+                              provider.deletePlayedCards(),
+                              getGameCards.then(
+                                (value) => {
+                                  provider.setCards(value),
+                                  print('cards were set'),
+                                },
+                              ),
+                              setState(() {}),
                             },
                           );
                         } else if (snapshot.data!.type == 'invalid') {
@@ -128,6 +132,11 @@ class _GameScreenState extends State<GameScreen> {
                             errorMessage = snapshot.data!.message.toString();
                             print('invalid message: $errorMessage');
                           }
+                          WidgetsBinding.instance?.addPostFrameCallback(
+                            (_) => {
+                              setState(() {}),
+                            },
+                          );
                         }
                       }
                     }
@@ -148,21 +157,12 @@ class _GameScreenState extends State<GameScreen> {
                                 color: Colors.green,
                                 enabled: true,
                                 onPressed: () {
-                                  provider.playCards(widget.webSocketService)
-                                      /*.then(
-                                      (value) => {
-                                        setState(
-                                          () {
-                                            cardService.fetchGameCards().then(
-                                                  (value) => {
-                                                    provider.setCards(value),
-                                                  },
-                                                );
-                                          },
-                                        ),
-                                      },
-                                    )*/
-                                      ;
+                                  provider.playCards(widget.webSocketService);
+                                  WidgetsBinding.instance?.addPostFrameCallback(
+                                    (_) => {
+                                      setState(() {}),
+                                    },
+                                  );
                                 },
                               ),
                             ),
