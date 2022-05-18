@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/widget/card_widget.dart';
-import 'package:websocket_mobile/mobile/game/model/game_provider.dart';
 
 class CardsOnTablePositionedRow extends StatelessWidget {
   const CardsOnTablePositionedRow({
@@ -12,7 +11,6 @@ class CardsOnTablePositionedRow extends StatelessWidget {
     required this.isVisible,
     required this.top,
     required this.left,
-    required this.provider,
     Key? key,
   }) : super(key: key);
   final double padding;
@@ -22,7 +20,6 @@ class CardsOnTablePositionedRow extends StatelessWidget {
   final bool isVisible;
   final double top;
   final double left;
-  final GameProvider provider;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +34,9 @@ class CardsOnTablePositionedRow extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemBuilder: (BuildContext context, int index) {
             return CardWidget(
-              id: cards[index].id,
-              number: cards[index].number,
-              shape: cards[index].shape,
-              rule: cards[index].rule,
-              state: cards[index].state,
+              playingCard: cards[index],
               size: height / 2,
               isVisible: isVisible,
-              provider: provider,
             );
           },
         ),

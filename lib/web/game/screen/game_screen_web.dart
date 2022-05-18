@@ -6,6 +6,7 @@ import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/player_data.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
+import 'package:websocket_mobile/web/game/model/table_cards.dart';
 import 'package:websocket_mobile/web/game/widget/table_cards.dart';
 
 class GameScreenWeb extends StatefulWidget {
@@ -27,6 +28,8 @@ class _GameScreenWebState extends State<GameScreenWeb> {
   late CardService cardService;
   List<String> connectedUsers = [];
   List<PlayerData> playerData = [];
+  late TableCards tableCards = TableCards([], []);
+
   late Future<void> loadData;
 
   Future<void> fetchData() async {
@@ -38,6 +41,12 @@ class _GameScreenWebState extends State<GameScreenWeb> {
           await cardService.fetchPlayerCards(CardState.Invisible);
       playerData.add(PlayerData(username, cardsUp, cardsDown));
     }
+    final List<PlayingCard> tableCardsPick =
+        await cardService.fetchTableCards(CardState.Pick);
+    final List<PlayingCard> tableCardsThrow =
+        await cardService.fetchTableCards(CardState.Throw);
+
+    tableCards = TableCards(tableCardsPick, tableCardsThrow);
   }
 
   @override
@@ -64,15 +73,24 @@ class _GameScreenWebState extends State<GameScreenWeb> {
       child: FutureBuilder<void>(
         future: loadData,
         builder: (context, snapshot) {
-          return Scaffold(
-            backgroundColor: Colors.brown,
-            body: Stack(
-              children: [
-                const TableCard(name: 'back'),
-                const TableCard(name: 'diamonds2'),
-              ],
-            ),
-          );
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Scaffold(
+              backgroundColor: Colors.brown,
+              body: Stack(
+                children: [
+                  if (tableCards.throws.isNotEmpty)
+                    const TableCard(name: 'back'),
+                  if (tableCards.picks.isNotEmpty)
+                    TableCard(
+                      name: '${tableCards.picks.first.shape}' +
+                          '${tableCards.picks.first.number}',
+                    ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         },
       ),
     );

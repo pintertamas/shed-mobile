@@ -77,200 +77,178 @@ class _GameScreenState extends State<GameScreen> {
     final provider = Provider.of<GameProvider>(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
-    return Visibility(
-      visible: MediaQuery.of(context).orientation != Orientation.portrait,
-      child: WillPopScope(
-        onWillPop: () async {
-          print('leaving game');
-          gameService
-              .leaveGame()
-              .then((value) => widget.webSocketService.deactivate())
-              .then(
-                (value) => Navigator.pushReplacementNamed(
-                  context,
-                  LoadingScreen.routeName,
-                ),
-              );
-          return true;
-        },
-        child: FutureBuilder<GameCards>(
-          future: loadData(provider),
-          builder: (context, futureSnapshot) {
-            if (futureSnapshot.hasData) {
-              return StreamBuilder<WebSocketEvent>(
-                stream: widget.webSocketService.webSocketStream,
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<WebSocketEvent> snapshot,
-                ) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    if (snapshot.data?.username == username) {
-                      if (snapshot.data?.uuid != lastUuid) {
-                        lastUuid = snapshot.data?.uuid ?? 'uuid';
-                        if (snapshot.data!.type == 'valid') {
-                          print('drawn cards:');
-                          for (final card in snapshot.data!.cards!) {
-                            print(card.toJson());
-                          }
-                          WidgetsBinding.instance?.addPostFrameCallback(
-                            (_) => {
-                              provider.deletePlayedCards(),
-                              getGameCards.then(
-                                (value) => {
-                                  provider.setCards(value),
-                                  print('cards were set'),
+    return Consumer<GameProvider>(
+      builder: (context, game, child) {
+        return Visibility(
+          visible: MediaQuery.of(context).orientation != Orientation.portrait,
+          child: WillPopScope(
+            onWillPop: () async {
+              print('leaving game');
+              gameService
+                  .leaveGame()
+                  .then((value) => widget.webSocketService.deactivate())
+                  .then(
+                    (value) => Navigator.pushReplacementNamed(
+                      context,
+                      LoadingScreen.routeName,
+                    ),
+                  );
+              return true;
+            },
+            child: FutureBuilder<GameCards>(
+              future: loadData(provider),
+              builder: (context, futureSnapshot) {
+                if (futureSnapshot.hasData) {
+                  return StreamBuilder<WebSocketEvent>(
+                    stream: widget.webSocketService.webSocketStream,
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<WebSocketEvent> snapshot,
+                    ) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        if (snapshot.data?.username == username) {
+                          if (snapshot.data?.uuid != lastUuid) {
+                            lastUuid = snapshot.data?.uuid ?? 'uuid';
+                            if (snapshot.data!.type == 'valid') {
+                              print('drawn cards:');
+                              for (final card in snapshot.data!.cards!) {
+                                print(card.toJson());
+                              }
+                              WidgetsBinding.instance?.addPostFrameCallback(
+                                (_) => {
+                                  game.deletePlayedCards(),
+                                  getGameCards.then(
+                                    (value) => {
+                                      game.setCards(value),
+                                      print('cards were set'),
+                                    },
+                                  ),
                                 },
-                              ),
-                              setState(() {}),
-                            },
-                          );
-                        } else if (snapshot.data!.type == 'invalid') {
-                          provider.selectedCards.clear();
-                          if (errorMessage !=
-                              snapshot.data!.message.toString()) {
-                            errorMessage = snapshot.data!.message.toString();
-                            print('invalid message: $errorMessage');
+                              );
+                            } else if (snapshot.data!.type == 'invalid') {
+                              game.selectedCards.clear();
+                              if (errorMessage !=
+                                  snapshot.data!.message.toString()) {
+                                errorMessage =
+                                    snapshot.data!.message.toString();
+                                print('invalid message: $errorMessage');
+                              }
+                            }
                           }
-                          WidgetsBinding.instance?.addPostFrameCallback(
-                            (_) => {
-                              setState(() {}),
-                            },
-                          );
                         }
                       }
-                    }
-                  }
-                  return SafeArea(
-                    child: Scaffold(
-                      backgroundColor: Colors.brown,
-                      body: Center(
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: padding,
-                              left: padding,
-                              child: CustomButton(
-                                text: 'Play',
-                                width:
-                                    width / 2 - height / 2 / 1.4 - padding * 7,
-                                color: Colors.green,
-                                enabled: true,
-                                onPressed: () {
-                                  provider.playCards(widget.webSocketService);
-                                },
-                              ),
-                            ),
-                            Positioned(
-                              top: padding,
-                              right: padding,
-                              child: CustomButton(
-                                text: 'Leave',
-                                width:
-                                    width / 2 - height / 2 / 1.4 - padding * 7,
-                                color: Colors.red,
-                                enabled: true,
-                                onPressed: () async {
-                                  print('leaving game');
-                                  gameService
-                                      .leaveGame()
-                                      .then(
-                                        (value) => widget.webSocketService
-                                            .deactivate(),
-                                      )
-                                      .then(
-                                        (value) =>
-                                            Navigator.pushReplacementNamed(
-                                          context,
-                                          LoadingScreen.routeName,
-                                        ),
-                                      );
-                                },
-                              ),
-                            ),
-                            CardsOnTablePositionedRow(
-                              provider: provider,
-                              top: 0,
-                              left: width / 2 - height / 2 / 1.4 - padding * 5,
-                              cards: context.watch<GameProvider>().cardsDown,
-                              padding: padding,
-                              width: width,
-                              height: height,
-                              isVisible: false,
-                            ),
-                            CardsOnTablePositionedRow(
-                              provider: provider,
-                              top: padding,
-                              left: width / 2 - height / 2 / 1.4 - padding * 5,
-                              cards: context.watch<GameProvider>().cardsUp,
-                              padding: padding,
-                              width: width,
-                              height: height,
-                              isVisible: true,
-                            ),
-                            if (context
-                                .watch<GameProvider>()
-                                .cardsInHand
-                                .isNotEmpty)
-                              Positioned(
-                                top: height / 2,
-                                left: 0,
-                                child: Container(
-                                  width: width,
-                                  height: height / 2 - padding,
-                                  color: Colors.green,
-                                  child: ListView.builder(
-                                    itemCount: context
-                                        .watch<GameProvider>()
-                                        .cardsInHand
-                                        .length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return CardWidget(
-                                        provider: provider,
-                                        id: context
-                                            .watch<GameProvider>()
-                                            .cardsInHand[index]
-                                            .id,
-                                        number: context
-                                            .watch<GameProvider>()
-                                            .cardsInHand[index]
-                                            .number,
-                                        shape: context
-                                            .watch<GameProvider>()
-                                            .cardsInHand[index]
-                                            .shape,
-                                        rule: context
-                                            .watch<GameProvider>()
-                                            .cardsInHand[index]
-                                            .rule,
-                                        state: context
-                                            .watch<GameProvider>()
-                                            .cardsInHand[index]
-                                            .state,
-                                        size: height / 2,
-                                        isVisible: true,
-                                      );
+
+                      return SafeArea(
+                        child: Scaffold(
+                          backgroundColor: Colors.brown,
+                          body: Center(
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: padding,
+                                  left: padding,
+                                  child: CustomButton(
+                                    text: 'Play',
+                                    width: width / 2 -
+                                        height / 2 / 1.4 -
+                                        padding * 7,
+                                    color: Colors.green,
+                                    enabled: true,
+                                    onPressed: () {
+                                      game.playCards(widget.webSocketService);
                                     },
                                   ),
                                 ),
-                              ),
-                          ],
+                                Positioned(
+                                  top: padding,
+                                  right: padding,
+                                  child: CustomButton(
+                                    text: 'Leave',
+                                    width: width / 2 -
+                                        height / 2 / 1.4 -
+                                        padding * 7,
+                                    color: Colors.red,
+                                    enabled: true,
+                                    onPressed: () async {
+                                      print('leaving game');
+                                      gameService
+                                          .leaveGame()
+                                          .then(
+                                            (value) => widget.webSocketService
+                                                .deactivate(),
+                                          )
+                                          .then(
+                                            (value) =>
+                                                Navigator.pushReplacementNamed(
+                                              context,
+                                              LoadingScreen.routeName,
+                                            ),
+                                          );
+                                    },
+                                  ),
+                                ),
+                                CardsOnTablePositionedRow(
+                                  top: 0,
+                                  left: width / 2 -
+                                      height / 2 / 1.4 -
+                                      padding * 5,
+                                  cards: game.cardsDown,
+                                  padding: padding,
+                                  width: width,
+                                  height: height,
+                                  isVisible: false,
+                                ),
+                                CardsOnTablePositionedRow(
+                                  top: padding,
+                                  left: width / 2 -
+                                      height / 2 / 1.4 -
+                                      padding * 5,
+                                  cards: game.cardsUp,
+                                  padding: padding,
+                                  width: width,
+                                  height: height,
+                                  isVisible: true,
+                                ),
+                                if (game.cardsInHand.isNotEmpty)
+                                  Positioned(
+                                    top: height / 2,
+                                    left: 0,
+                                    child: Container(
+                                      width: width,
+                                      height: height / 2 - padding,
+                                      color: Colors.green,
+                                      child: ListView.builder(
+                                        itemCount: game.cardsInHand.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return CardWidget(
+                                            playingCard:
+                                                game.cardsInHand[index],
+                                            size: height / 2,
+                                            isVisible: true,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
-                },
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-      ),
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 

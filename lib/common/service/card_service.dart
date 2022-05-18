@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
+import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
 
 class CardService {
@@ -48,7 +49,44 @@ class CardService {
       print(response.requestOptions.uri);
 
       if (response.statusCode == 200) {
-        final List<PlayingCard> cards = (jsonDecode(response.data.toString()) as List)
+        final List<PlayingCard> cards = (jsonDecode(response.data.toString())
+                as List)
+            .map((card) => PlayingCard.fromJson(card as Map<String, dynamic>))
+            .toList();
+        for (final PlayingCard card in cards) {
+          card.state = state;
+        }
+        return cards;
+      }
+      return [];
+    } on DioError catch (e) {
+      print(e.message);
+      print('uri in catch: ${e.requestOptions.uri}');
+
+      return [];
+    }
+  }
+
+  Future<List<PlayingCard>> fetchTableCards(
+    CardState state,
+  ) async {
+    final String gameName = await GameService.getGameName();
+
+    try {
+      final response = await dio.get(
+        '/cards/table/$gameName/${state.name}',
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      print(response.requestOptions.uri);
+
+      if (response.statusCode == 200) {
+        final List<PlayingCard> cards = (jsonDecode(response.data.toString())
+                as List)
             .map((card) => PlayingCard.fromJson(card as Map<String, dynamic>))
             .toList();
         for (final PlayingCard card in cards) {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
 import 'package:websocket_mobile/common/model/game_cards.dart';
+import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/mobile/user_management/service/user_service.dart';
@@ -92,24 +92,26 @@ class GameProvider with ChangeNotifier {
   }
 
   void deletePlayedCards() {
+    print('length of selected cards: ${selectedCards.length}');
+
     for (final card in selectedCards) {
-      removeCardFromHand(card);
-      removeCardFromTableUp(card);
-      removeCardFromTableDown(card);
+      print('1) length of cards in hand: ${cardsInHand.length}');
+      removeCardsFromListOfCards(card, cardsInHand);
+      removeCardsFromListOfCards(card, cardsUp);
+      removeCardsFromListOfCards(card, cardsDown);
+      print('2) length of cards in hand: ${cardsInHand.length}');
     }
     selectedCards.clear();
     notifyListeners();
   }
 
-  void removeCardFromHand(PlayingCard card) {
-    _cardsInHand.remove(card);
-  }
-
-  void removeCardFromTableDown(PlayingCard card) {
-    _cardsDown.remove(card);
-  }
-
-  void removeCardFromTableUp(PlayingCard card) {
-    _cardsUp.remove(card);
+  void removeCardsFromListOfCards(PlayingCard card, List<PlayingCard> cards) {
+    for(int i = 0; i < cards.length; i++) {
+      if (cards[i].id == card.id) {
+        cards.remove(cards[i]);
+        print('removing card no. ${card.number} from $cards');
+      }
+    }
+    notifyListeners();
   }
 }
