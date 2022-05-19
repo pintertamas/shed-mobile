@@ -84,6 +84,7 @@ class OtpService {
     required BuildContext context,
   }) async {
     bool result = false;
+
     await userService
         .register(
           username,
@@ -106,10 +107,12 @@ class OtpService {
                         result = response,
                         if (response)
                           {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              HomeScreen.routeName,
-                            ),
+                            userService.saveUsername(username).then(
+                                  (value) => Navigator.pushReplacementNamed(
+                                    context,
+                                    HomeScreen.routeName,
+                                  ),
+                                ),
                           },
                       },
                     ),

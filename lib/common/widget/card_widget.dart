@@ -20,11 +20,11 @@ class CardWidget extends StatefulWidget {
 }
 
 class _CardWidgetState extends State<CardWidget> {
-  double top = 200;
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<GameProvider>(context);
+    final bool isSelected =
+        !provider.containsCard(provider.selectedCards, widget.playingCard);
 
     final String shape = widget.playingCard.shape.name.toLowerCase();
     final String cardName =
@@ -32,22 +32,19 @@ class _CardWidgetState extends State<CardWidget> {
 
     return GestureDetector(
       onTap: () {
-        final PlayingCard card = PlayingCard(
-          widget.playingCard.id,
-          widget.playingCard.number,
-          widget.playingCard.shape,
-          widget.playingCard.rule,
-          widget.playingCard.state,
-        );
+        final PlayingCard card = widget.playingCard;
         provider.selectCard(card);
         print('selectedCards:');
         for (final PlayingCard card in provider.selectedCards) {
           print(card.toJson());
         }
       },
-      child: CustomPlayingCard(
-        cardName: cardName,
-        size: widget.size,
+      child: AnimatedContainer(
+        duration: const Duration(microseconds: 250),
+        child: CustomPlayingCard(
+          cardName: cardName,
+          size: isSelected ? widget.size : widget.size * 1.15,
+        ),
       ),
     );
   }

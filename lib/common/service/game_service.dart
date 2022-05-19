@@ -105,7 +105,7 @@ class GameService {
         throw DioError;
       }
     } on DioError catch (e) {
-      print('game list status code: ${e.response!.statusCode}');
+      print('game list status code: ${e.response?.statusCode}');
       print('response data: ${e.response!.data ?? 'Error'}');
       return [];
     }

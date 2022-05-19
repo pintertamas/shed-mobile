@@ -39,43 +39,40 @@ class GameProvider with ChangeNotifier {
     return false;
   }
 
-  void selectCard(PlayingCard newCard) {
-    if (containsCard(selectedCards, newCard)) {
-      selectedCards.remove(newCard);
-    } else if (cardsInHand.isNotEmpty) {
-      if (newCard.state == CardState.Hand) {
-        if (selectedCards.isNotEmpty) {
-          selectedCards.clear();
-        }
-        selectedCards.add(newCard);
-      } else if (newCard.state != CardState.Hand) {
-        if (newCard.state == CardState.Invisible) {
-          notifyListeners();
-          return;
-        }
-        for (final PlayingCard card in cardsInHand) {
-          if (!selectedCards.contains(card)) {
-            notifyListeners();
-            return;
-          }
-        }
-        if (selectedCards.first.number == newCard.number) {
-          selectedCards.add(newCard);
-        }
-      }
-    } else if (cardsUp.isNotEmpty) {
-      if (newCard.state == CardState.Invisible) {
-        notifyListeners();
-        return;
-      } else if (selectedCards.isEmpty && newCard.state == CardState.Visible) {
-        selectedCards.add(newCard);
-      }
-    } else if (selectedCards.isNotEmpty &&
-        selectedCards.first.number == newCard.number) {
-      selectedCards.add(newCard);
+  bool isEveryCardSelected() {
+    for (final PlayingCard card in _cardsInHand) {
+      if (!containsCard(_selectedCards, card)) return false;
+    }
+    return true;
+  }
+
+  void selectNewCard(PlayingCard newCard) {
+    if (_selectedCards.isNotEmpty &&
+        newCard.number != _selectedCards.first.number) {
+      _selectedCards.clear();
+      _selectedCards.add(newCard);
     } else {
-      selectedCards.clear();
-      selectedCards.add(newCard);
+      _selectedCards.add(newCard);
+    }
+  }
+
+  void selectCard(PlayingCard newCard) {
+    if (containsCard(_selectedCards, newCard)) {
+      _selectedCards.remove(newCard);
+    } else if (newCard.state == CardState.Hand) {
+      selectNewCard(newCard);
+    } else if (newCard.state == CardState.Visible) {
+      if (_cardsInHand.isNotEmpty || !isEveryCardSelected()) {
+        return;
+      } else {
+        selectNewCard(newCard);
+      }
+    } else if (newCard.state == CardState.Invisible) {
+      if (_cardsInHand.isNotEmpty || _cardsUp.isNotEmpty) {
+        return;
+      }
+      _selectedCards.clear();
+      _selectedCards.add(newCard);
     }
     notifyListeners();
   }
@@ -87,31 +84,35 @@ class GameProvider with ChangeNotifier {
     webSocketService.sendAction(
       channel,
       username,
-      selectedCards,
+      _selectedCards,
     );
   }
 
   void deletePlayedCards() {
-    print('length of selected cards: ${selectedCards.length}');
-
-    for (final card in selectedCards) {
-      print('1) length of cards in hand: ${cardsInHand.length}');
-      removeCardsFromListOfCards(card, cardsInHand);
-      removeCardsFromListOfCards(card, cardsUp);
-      removeCardsFromListOfCards(card, cardsDown);
-      print('2) length of cards in hand: ${cardsInHand.length}');
+    print('length of selected cards: ${_selectedCards.length}');
+    for (PlayingCard card in _cardsInHand) {
+      print(card.number);
     }
-    selectedCards.clear();
+    for (final card in _selectedCards) {
+      print('1) length of cards in hand: ${_cardsInHand.length}');
+      removeCardsFromListOfCards(card, _cardsInHand);
+      removeCardsFromListOfCards(card, _cardsUp);
+      removeCardsFromListOfCards(card, _cardsDown);
+      print('2) length of cards in hand: ${_cardsInHand.length}');
+    }
+    for (PlayingCard card in _cardsInHand) {
+      print(card.number);
+    }
     notifyListeners();
   }
 
   void removeCardsFromListOfCards(PlayingCard card, List<PlayingCard> cards) {
-    for(int i = 0; i < cards.length; i++) {
+    for (int i = 0; i < cards.length; i++) {
       if (cards[i].id == card.id) {
         cards.remove(cards[i]);
         print('removing card no. ${card.number} from $cards');
+        notifyListeners();
       }
     }
-    notifyListeners();
   }
 }

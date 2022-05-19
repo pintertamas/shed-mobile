@@ -37,6 +37,7 @@ class _GameScreenState extends State<GameScreen> {
   late Future<GameCards> getGameCards;
   late Future<void> getUsername;
   late String username;
+  bool shouldLoad = true;
 
   String lastUuid = '';
   String errorMessage = '';
@@ -46,13 +47,15 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<GameCards> loadData(GameProvider provider) async {
-    await UserService.getUsername();
-    final GameCards gameCards = await getGameCards;
-    if (mounted) {
-      return provider.setCards(gameCards);
-    } else {
-      return GameCards([], [], []);
+    if (shouldLoad) {
+      await UserService.getUsername();
+      final GameCards gameCards = await cardService.fetchGameCards();
+      shouldLoad = false;
+      if (mounted) {
+        return provider.setCards(gameCards);
+      }
     }
+    return GameCards([], [], []);
   }
 
   @override
@@ -74,70 +77,69 @@ class _GameScreenState extends State<GameScreen> {
     if (!mounted) return const Center();
     setState(() {});
 
-    final provider = Provider.of<GameProvider>(context);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    return Consumer<GameProvider>(
-      builder: (context, game, child) {
-        return Visibility(
-          visible: MediaQuery.of(context).orientation != Orientation.portrait,
-          child: WillPopScope(
-            onWillPop: () async {
-              print('leaving game');
-              gameService
-                  .leaveGame()
-                  .then((value) => widget.webSocketService.deactivate())
-                  .then(
-                    (value) => Navigator.pushReplacementNamed(
-                      context,
-                      LoadingScreen.routeName,
-                    ),
-                  );
-              return true;
-            },
-            child: FutureBuilder<GameCards>(
-              future: loadData(provider),
-              builder: (context, futureSnapshot) {
-                if (futureSnapshot.hasData) {
-                  return StreamBuilder<WebSocketEvent>(
-                    stream: widget.webSocketService.webSocketStream,
-                    builder: (
-                      BuildContext context,
-                      AsyncSnapshot<WebSocketEvent> snapshot,
-                    ) {
-                      if (snapshot.hasData && snapshot.data != null) {
-                        if (snapshot.data?.username == username) {
-                          if (snapshot.data?.uuid != lastUuid) {
-                            lastUuid = snapshot.data?.uuid ?? 'uuid';
-                            if (snapshot.data!.type == 'valid') {
-                              print('drawn cards:');
-                              for (final card in snapshot.data!.cards!) {
-                                print(card.toJson());
-                              }
-                              WidgetsBinding.instance?.addPostFrameCallback(
-                                (_) => {
-                                  game.deletePlayedCards(),
-                                  getGameCards.then(
-                                    (value) => {
-                                      game.setCards(value),
-                                      print('cards were set'),
-                                    },
-                                  ),
+    return Visibility(
+      visible: MediaQuery.of(context).orientation != Orientation.portrait,
+      child: WillPopScope(
+        onWillPop: () async {
+          print('leaving game');
+          gameService
+              .leaveGame()
+              .then((value) => widget.webSocketService.deactivate())
+              .then(
+                (value) => Navigator.pushReplacementNamed(
+                  context,
+                  LoadingScreen.routeName,
+                ),
+              );
+          return true;
+        },
+        child: FutureBuilder<GameCards>(
+          future: loadData(Provider.of<GameProvider>(context)),
+          builder: (context, futureSnapshot) {
+            final game = context.read<GameProvider>();
+            if (futureSnapshot.hasData) {
+              return StreamBuilder<WebSocketEvent>(
+                stream: widget.webSocketService.webSocketStream,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<WebSocketEvent> snapshot,
+                ) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    if (snapshot.data?.username == username) {
+                      if (snapshot.data?.uuid != lastUuid) {
+                        shouldLoad = true;
+                        lastUuid = snapshot.data?.uuid ?? 'uuid';
+                        if (snapshot.data!.type == 'valid') {
+                          print('drawn cards:');
+                          for (final card in snapshot.data!.cards!) {
+                            print(card.toJson());
+                          }
+                          WidgetsBinding.instance?.addPostFrameCallback(
+                            (_) => {
+                              game.deletePlayedCards(),
+                              getGameCards.then(
+                                (value) => {
+                                  game.setCards(value),
+                                  print('cards were set'),
                                 },
-                              );
-                            } else if (snapshot.data!.type == 'invalid') {
-                              game.selectedCards.clear();
-                              if (errorMessage !=
-                                  snapshot.data!.message.toString()) {
-                                errorMessage =
-                                    snapshot.data!.message.toString();
-                                print('invalid message: $errorMessage');
-                              }
-                            }
+                              ),
+                            },
+                          );
+                        } else if (snapshot.data!.type == 'invalid') {
+                          game.selectedCards.clear();
+                          if (errorMessage !=
+                              snapshot.data!.message.toString()) {
+                            errorMessage = snapshot.data!.message.toString();
+                            print('invalid message: $errorMessage');
                           }
                         }
                       }
-
+                    }
+                  }
+                  return Consumer<GameProvider>(
+                    builder: (context, game, child) {
                       return SafeArea(
                         child: Scaffold(
                           backgroundColor: Colors.brown,
@@ -153,7 +155,7 @@ class _GameScreenState extends State<GameScreen> {
                                         height / 2 / 1.4 -
                                         padding * 7,
                                     color: Colors.green,
-                                    enabled: true,
+                                    enabled: !shouldLoad,
                                     onPressed: () {
                                       game.playCards(widget.webSocketService);
                                     },
@@ -239,16 +241,16 @@ class _GameScreenState extends State<GameScreen> {
                       );
                     },
                   );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          ),
-        );
-      },
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 
