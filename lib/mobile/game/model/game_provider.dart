@@ -90,18 +90,12 @@ class GameProvider with ChangeNotifier {
 
   void deletePlayedCards() {
     print('length of selected cards: ${_selectedCards.length}');
-    for (PlayingCard card in _cardsInHand) {
-      print(card.number);
-    }
     for (final card in _selectedCards) {
       print('1) length of cards in hand: ${_cardsInHand.length}');
       removeCardsFromListOfCards(card, _cardsInHand);
       removeCardsFromListOfCards(card, _cardsUp);
       removeCardsFromListOfCards(card, _cardsDown);
       print('2) length of cards in hand: ${_cardsInHand.length}');
-    }
-    for (PlayingCard card in _cardsInHand) {
-      print(card.number);
     }
     notifyListeners();
   }

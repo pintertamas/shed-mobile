@@ -42,4 +42,6 @@ const _$CardStateEnumMap = {
   CardState.Hand: 'Hand',
   CardState.Visible: 'Visible',
   CardState.Invisible: 'Invisible',
+  CardState.Pick: 'Pick',
+  CardState.Throw: 'Throw',
 };

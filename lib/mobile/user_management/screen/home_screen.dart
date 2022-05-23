@@ -48,10 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
         future: isPlayerInExistingGame,
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.hasData && snapshot.data != '') {
-            final String? gameName = snapshot.data;
+            final String gameName = snapshot.data!;
             print('already in game: $gameName');
             final WebSocketService webSocketService = WebSocketService();
-            webSocketService.initStompClient(gameName!).then(
+            webSocketService.initStompClient(channel: gameName).then(
                   (value) => {
                     Navigator.pushReplacementNamed(
                       context,

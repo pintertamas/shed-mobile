@@ -59,7 +59,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
     print('on lobby screen with ${webSocketService.hashCode}');
     if (webSocketService.hashCode == newWSSHash) {
-      webSocketService.initStompClient(widget.gameId);
+      webSocketService.initStompClient(channel: widget.gameId);
     }
 
     gameService = GameService();

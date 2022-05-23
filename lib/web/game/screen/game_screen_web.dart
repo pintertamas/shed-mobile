@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:websocket_mobile/common/model/card_state.dart';
+import 'package:websocket_mobile/common/model/card_type.dart';
 import 'package:websocket_mobile/common/model/playing_card.dart';
 import 'package:websocket_mobile/common/service/card_service.dart';
 import 'package:websocket_mobile/common/service/game_service.dart';
+import 'package:websocket_mobile/mobile/lobby/model/websocket_event.dart';
 import 'package:websocket_mobile/mobile/lobby/service/websocket_service.dart';
 import 'package:websocket_mobile/web/create_game/model/player_data.dart';
 import 'package:websocket_mobile/web/create_game/screen/create_game_screen.dart';
@@ -34,22 +36,27 @@ class _GameScreenWebState extends State<GameScreenWeb> {
 
   Future<void> fetchData() async {
     await gameService.loadConnectedUsers(connectedUsers);
+    print(connectedUsers.toString());
     for (final String username in connectedUsers) {
-      final List<PlayingCard> cardsUp =
-          await cardService.fetchPlayerCards(CardState.Visible);
-      final List<PlayingCard> cardsDown =
-          await cardService.fetchPlayerCards(CardState.Invisible);
+      final List<PlayingCard> cardsUp = await cardService
+          .fetchCards(CardType.Player, CardState.Visible, username: username);
+      final List<PlayingCard> cardsDown = await cardService
+          .fetchCards(CardType.Player, CardState.Invisible, username: username);
       playerData.add(PlayerData(username, cardsUp, cardsDown));
     }
-    final List<PlayingCard> tableCardsPick =
-        await cardService.fetchTableCards(CardState.Pick);
-    final List<PlayingCard> tableCardsThrow =
-        await cardService.fetchTableCards(CardState.Throw);
+    try {
+      final List<PlayingCard> tableCardsPick =
+          await cardService.fetchCards(CardType.Table, CardState.Pick);
+      final List<PlayingCard> tableCardsThrow =
+          await cardService.fetchCards(CardType.Table, CardState.Throw);
 
-    tableCards = TableCards(tableCardsPick, tableCardsThrow);
+      tableCards = TableCards(tableCardsPick, tableCardsThrow);
 
-    print(tableCardsPick.length);
-    print(tableCards.picks.length);
+      print('table cards pick length: ${tableCards.picks.length}');
+      print('table cards throw length: ${tableCards.throws.length}');
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -57,7 +64,7 @@ class _GameScreenWebState extends State<GameScreenWeb> {
     gameService = GameService();
     cardService = CardService();
     webSocketService = WebSocketService();
-    webSocketService.initStompClient('unknown');
+    webSocketService.initStompClient();
     loadData = fetchData();
     super.initState();
   }
@@ -76,20 +83,41 @@ class _GameScreenWebState extends State<GameScreenWeb> {
       child: FutureBuilder<void>(
         future: loadData,
         builder: (context, snapshot) {
+          tableCards.picks.toString();
           if (snapshot.connectionState == ConnectionState.done) {
-            return Scaffold(
-              backgroundColor: Colors.brown,
-              body: Stack(
-                children: [
-                  if (tableCards.throws.isNotEmpty)
-                    const TableCard(name: 'back'),
-                  if (tableCards.picks.isNotEmpty)
-                    TableCard(
-                      name: '${tableCards.picks.first.shape}' +
-                          '${tableCards.picks.first.number}',
-                    ),
-                ],
-              ),
+            return StreamBuilder<WebSocketEvent>(
+                stream: widget.webSocketService.webSocketStream,
+                builder: (
+                    BuildContext context,
+                    AsyncSnapshot<WebSocketEvent> snapshot,
+                    ) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    if (snapshot.data!.type == 'valid') {
+                      print('valid card received');
+                    } else if (snapshot.data!.type == 'invalid') {
+                      print('invalid card received');
+                    }
+                    else {
+                      print(snapshot.data?.type);
+                    }
+                  }
+                return Scaffold(
+                  backgroundColor: Colors.brown,
+                  body: Stack(
+                    children: [
+                      TableCard(
+                        name: 'back',
+                        isEmpty: tableCards.throws.isNotEmpty,
+                      ),
+                      TableCard(
+                        name:
+                            '${tableCards.picks.first.shape.name.toLowerCase()}${tableCards.picks.first.number}',
+                        isEmpty: tableCards.picks.isNotEmpty,
+                      ),
+                    ],
+                  ),
+                );
+              }
             );
           } else {
             return const Center(child: CircularProgressIndicator());

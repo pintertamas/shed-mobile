@@ -180,7 +180,7 @@ class _BrowseGamesWidgetState extends State<BrowseGamesWidget> {
                                     gameService.saveGameName(gameName);
                                     print('joining $gameName...');
                                     webSocketService
-                                        .initStompClient(gameName)
+                                        .initStompClient(channel: gameName)
                                         .then(
                                           (value) => {
                                             if (kIsWeb)

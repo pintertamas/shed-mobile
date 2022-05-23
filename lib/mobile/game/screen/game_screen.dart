@@ -100,7 +100,6 @@ class _GameScreenState extends State<GameScreen> {
           builder: (context, futureSnapshot) {
             final game = context.read<GameProvider>();
             if (futureSnapshot.hasData) {
-              print(context.watch<GameProvider>().cardsInHand[0].number);
               return StreamBuilder<WebSocketEvent>(
                 stream: widget.webSocketService.webSocketStream,
                 builder: (
@@ -135,6 +134,8 @@ class _GameScreenState extends State<GameScreen> {
                             errorMessage = snapshot.data!.message.toString();
                             print('invalid message: $errorMessage');
                           }
+                        } else if (snapshot.data!.type == 'draw') {
+                          game.selectedCards.clear();
                         }
                       }
                     }
@@ -160,7 +161,8 @@ class _GameScreenState extends State<GameScreen> {
                                         color: Colors.green,
                                         enabled: !shouldLoad,
                                         onPressed: () {
-                                          game.playCards(widget.webSocketService);
+                                          game.playCards(
+                                              widget.webSocketService);
                                         },
                                       ),
                                       CustomButton(
@@ -171,7 +173,10 @@ class _GameScreenState extends State<GameScreen> {
                                         color: Colors.blue,
                                         enabled: !shouldLoad,
                                         onPressed: () {
-                                          //gameService.drawCards(widget.webSocketService);
+                                          widget.webSocketService.drawCard(
+                                            widget.gameId,
+                                            username,
+                                          );
                                         },
                                       ),
                                     ],

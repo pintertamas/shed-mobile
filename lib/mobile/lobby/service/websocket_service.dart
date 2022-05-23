@@ -16,7 +16,8 @@ class WebSocketService {
   late StompClient stompClient;
   final webSocketStream = BehaviorSubject<WebSocketEvent>();
 
-  Future<void> initStompClient(String channel) async {
+  Future<void> initStompClient({String? channel}) async {
+    final String _channel = channel ?? 'unknown';
     final String jwtToken = await UserService.getJwtToken();
     final String username = await UserService.getUsername();
 
@@ -24,7 +25,7 @@ class WebSocketService {
       config: StompConfig.SockJS(
         url: 'https://shed-backend.herokuapp.com/shed',
         onConnect: (_) {
-          _onConnect(_, channel);
+          _onConnect(_, _channel);
           if (kIsWeb) return;
           webSocketStream.add(
             WebSocketEvent(
@@ -32,7 +33,7 @@ class WebSocketService {
               username: username,
             ),
           );
-          joinGame(channel, username);
+          joinGame(_channel, username);
         },
         onDisconnect: (frame) {
           _onDisconnect(frame);
@@ -44,7 +45,7 @@ class WebSocketService {
           print('unhandledError: $error');
         },
         beforeConnect: () async {
-          print('waiting to connect to $channel...');
+          print('waiting to connect to $_channel...');
           await Future.delayed(const Duration(milliseconds: 200));
           print('connecting...');
         },
@@ -83,6 +84,10 @@ class WebSocketService {
         final String uuid = result['uuid'].toString();
         final String type = result['type'].toString();
         final String message = result['message'].toString();
+        final List<PlayingCard> cards = (jsonDecode(result['cards'].toString())
+        as List)
+            .map((card) => PlayingCard.fromJson(card as Map<String, dynamic>))
+            .toList();
 
         if (['connect', 'join', 'leave', 'game-start'].contains(type)) {
           print('type: $type');
@@ -93,7 +98,7 @@ class WebSocketService {
               message: message,
             ),
           );
-        } else if (['valid', 'invalid'].contains(type)) {
+        } else if (['valid', 'invalid', 'draw'].contains(type)) {
           print('getting username...');
           print('message');
           final String username = result['username'].toString();
@@ -105,7 +110,7 @@ class WebSocketService {
               type: type,
               message: message,
               username: username,
-              cards: [], // TODO
+              cards: cards,
             ),
           );
         }
@@ -124,6 +129,17 @@ class WebSocketService {
     if (!kIsWeb) {
       stompClient.send(
         destination: '/app/join-game/$channel/$username',
+      );
+    }
+    print('Join game signal sent...');
+  }
+
+  void drawCard(channel, username) {
+    if (!stompClient.connected) return;
+
+    if (!kIsWeb) {
+      stompClient.send(
+        destination: '/app/pick-a-card/$channel/$username',
       );
     }
     print('Join game signal sent...');
