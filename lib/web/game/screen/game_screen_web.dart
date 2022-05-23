@@ -47,6 +47,9 @@ class _GameScreenWebState extends State<GameScreenWeb> {
         await cardService.fetchTableCards(CardState.Throw);
 
     tableCards = TableCards(tableCardsPick, tableCardsThrow);
+
+    print(tableCardsPick.length);
+    print(tableCards.picks.length);
   }
 
   @override

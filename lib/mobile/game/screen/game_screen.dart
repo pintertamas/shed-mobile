@@ -100,6 +100,7 @@ class _GameScreenState extends State<GameScreen> {
           builder: (context, futureSnapshot) {
             final game = context.read<GameProvider>();
             if (futureSnapshot.hasData) {
+              print(context.watch<GameProvider>().cardsInHand[0].number);
               return StreamBuilder<WebSocketEvent>(
                 stream: widget.webSocketService.webSocketStream,
                 builder: (

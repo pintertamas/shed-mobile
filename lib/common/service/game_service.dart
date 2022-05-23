@@ -150,7 +150,7 @@ class GameService {
     } on DioError catch (e) {
       print('error: ${e.message}');
       print('player list status code: ${e.response?.statusCode}');
-      print('response data: ${e.response!.data}');
+      print('response data: ${e.response?.data}');
       return [];
     }
   }
