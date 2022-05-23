@@ -150,16 +150,31 @@ class _GameScreenState extends State<GameScreen> {
                                 Positioned(
                                   top: padding,
                                   left: padding,
-                                  child: CustomButton(
-                                    text: 'Play',
-                                    width: width / 2 -
-                                        height / 2 / 1.4 -
-                                        padding * 7,
-                                    color: Colors.green,
-                                    enabled: !shouldLoad,
-                                    onPressed: () {
-                                      game.playCards(widget.webSocketService);
-                                    },
+                                  child: Column(
+                                    children: [
+                                      CustomButton(
+                                        text: 'Play',
+                                        width: width / 2 -
+                                            height / 2 / 1.4 -
+                                            padding * 7,
+                                        color: Colors.green,
+                                        enabled: !shouldLoad,
+                                        onPressed: () {
+                                          game.playCards(widget.webSocketService);
+                                        },
+                                      ),
+                                      CustomButton(
+                                        text: 'Draw',
+                                        width: width / 2 -
+                                            height / 2 / 1.4 -
+                                            padding * 7,
+                                        color: Colors.blue,
+                                        enabled: !shouldLoad,
+                                        onPressed: () {
+                                          //gameService.drawCards(widget.webSocketService);
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Positioned(
